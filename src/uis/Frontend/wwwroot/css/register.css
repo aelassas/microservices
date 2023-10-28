@@ -1,0 +1,21 @@
+﻿.header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 43px;
+    background: #29a85c;
+}
+
+.register {
+    width: 350px;
+    height: 160px;
+    position: absolute;
+    top: calc(50% - 80px);
+    left: calc(50% - 175px);
+    font-weight: bold;
+}
+
+    .register #register {
+        float: right;
+    }

@@ -1,0 +1,70 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo
+    ports:
+       - 27017:27017
+
+  catalog:
+    build:
+      context: .
+      dockerfile: src/microservices/CatalogMicroservice/Dockerfile
+    depends_on:
+      - mongo
+    ports:
+      - 44326:80
+
+  cart:
+    build:
+      context: .
+      dockerfile: src/microservices/CartMicroservice/Dockerfile
+    depends_on:
+      - mongo
+    ports:
+      - 44388:80
+
+  identity:
+    build:
+      context: .
+      dockerfile: src/microservices/IdentityMicroservice/Dockerfile
+    depends_on:
+      - mongo
+    ports:
+      - 44397:80
+
+  frontendgw:
+    build:
+      context: .
+      dockerfile: src/gateways/FrontendGateway/Dockerfile
+    depends_on:
+      - mongo
+      - catalog
+      - cart
+      - identity
+    ports:
+      - 44300:80
+
+  backendgw:
+    build:
+      context: .
+      dockerfile: src/gateways/BackendGateway/Dockerfile
+    depends_on:
+      - mongo
+      - catalog
+      - identity
+    ports:
+      - 44359:80
+
+  frontend:
+    build:
+      context: .
+      dockerfile: src/uis/Frontend/Dockerfile
+    ports:
+      - 44317:80
+
+  backend:
+    build:
+      context: .
+      dockerfile: src/uis/Backend/Dockerfile
+    ports:
+      - 44301:80
