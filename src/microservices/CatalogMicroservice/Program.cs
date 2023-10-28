@@ -20,6 +20,11 @@ public static class Program
                     .AddJsonFile("appsettings.json", true, true)
                     .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
                     .AddEnvironmentVariables();
+
+                if (hostingContext.HostingEnvironment.EnvironmentName == "Development")
+                {
+                    config.AddJsonFile("appsettings.Local.json", true, true);
+                }
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {
