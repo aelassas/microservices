@@ -19,3 +19,5 @@ jobs:
             dotnet-version: 7.x
       - name: Build
         run: dotnet build
+      - name: Test
+        run: dotnet test
