@@ -51,8 +51,7 @@ public class CartRepository : ICartRepository
         {
             cart.CartItems.RemoveAll(ci => ci.CatalogItemId == cartItem.CatalogItemId);
             cart.CartItems.Add(cartItem);
-            var update = Builders<Cart>
-                .Update
+            var update = Builders<Cart>.Update
                 .Set(c => c.CartItems, cart.CartItems);
             _col.UpdateOne(c => c.UserId == userId, update);
         }
@@ -64,8 +63,7 @@ public class CartRepository : ICartRepository
         if (cart != null)
         {
             cart.CartItems.RemoveAll(ci => ci.CatalogItemId == catalogItemId);
-            var update = Builders<Cart>
-                .Update
+            var update = Builders<Cart>.Update
                 .Set(c => c.CartItems, cart.CartItems);
             _col.UpdateOne(c => c.UserId == userId, update);
         }
