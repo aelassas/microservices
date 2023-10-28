@@ -6,7 +6,7 @@ namespace CartMicroservice.Repository;
 
 public interface ICartRepository
 {
-    IEnumerable<CartItem> GetCartItems(Guid userId);
+    IList<CartItem> GetCartItems(Guid userId);
     void InsertCartItem(Guid userId, CartItem cartItem);
     void UpdateCartItem(Guid userId, CartItem cartItem);
     void DeleteCartItem(Guid userId, Guid cartItemId);

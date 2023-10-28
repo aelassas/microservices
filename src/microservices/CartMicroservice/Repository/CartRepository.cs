@@ -15,7 +15,7 @@ public class CartRepository : ICartRepository
         _col = db.GetCollection<Cart>(Cart.DocumentName);
     }
 
-    public IEnumerable<CartItem> GetCartItems(Guid userId) =>
+    public IList<CartItem> GetCartItems(Guid userId) =>
         _col.Find(c => c.UserId == userId).FirstOrDefault()?.CartItems ?? new List<CartItem>();
 
 
