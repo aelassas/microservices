@@ -7,46 +7,28 @@ namespace CatalogMicroservice.Repository;
 
 public class CatalogRepository : ICatalogRepository
 {
-    private readonly IMongoDatabase _db;
+    private readonly IMongoCollection<CatalogItem> _col;
 
     public CatalogRepository(IMongoDatabase db)
     {
-        _db = db;
+        _col = db.GetCollection<CatalogItem>(CatalogItem.DocumentName);
     }
 
-    public IEnumerable<CatalogItem> GetCatalogItems()
-    {
-        var col = _db.GetCollection<CatalogItem>(CatalogItem.DocumentName);
-        var catalogItems = col.Find(FilterDefinition<CatalogItem>.Empty).ToEnumerable();
-        return catalogItems;
-    }
+    public IList<CatalogItem> GetCatalogItems() =>
+        _col.Find(FilterDefinition<CatalogItem>.Empty).ToList();
 
-    public CatalogItem? GetCatalogItem(Guid catalogItemId)
-    {
-        var col = _db.GetCollection<CatalogItem>(CatalogItem.DocumentName);
-        var catalogItem = col.Find(c => c.Id == catalogItemId).FirstOrDefault();
-        return catalogItem;
-    }
+    public CatalogItem GetCatalogItem(Guid catalogItemId) =>
+        _col.Find(c => c.Id == catalogItemId).FirstOrDefault();
 
-    public void InsertCatalogItem(CatalogItem catalogItem)
-    {
-        var col = _db.GetCollection<CatalogItem>(CatalogItem.DocumentName);
-        col.InsertOne(catalogItem);
-    }
+    public void InsertCatalogItem(CatalogItem catalogItem) =>
+        _col.InsertOne(catalogItem);
 
-    public void UpdateCatalogItem(CatalogItem catalogItem)
-    {
-        var col = _db.GetCollection<CatalogItem>(CatalogItem.DocumentName);
-        var update = Builders<CatalogItem>.Update
+    public void UpdateCatalogItem(CatalogItem catalogItem) =>
+        _col.UpdateOne(c => c.Id == catalogItem.Id, Builders<CatalogItem>.Update
             .Set(c => c.Name, catalogItem.Name)
             .Set(c => c.Description, catalogItem.Description)
-            .Set(c => c.Price, catalogItem.Price);
-        col.UpdateOne(c => c.Id == catalogItem.Id, update);
-    }
+            .Set(c => c.Price, catalogItem.Price));
 
-    public void DeleteCatalogItem(Guid catalogItemId)
-    {
-        var col = _db.GetCollection<CatalogItem>(CatalogItem.DocumentName);
-        col.DeleteOne(c => c.Id == catalogItemId);
-    }
+    public void DeleteCatalogItem(Guid catalogItemId) =>
+        _col.DeleteOne(c => c.Id == catalogItemId);
 }

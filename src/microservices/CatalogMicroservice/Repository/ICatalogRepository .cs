@@ -6,7 +6,7 @@ namespace CatalogMicroservice.Repository;
 
 public interface ICatalogRepository
 {
-    IEnumerable<CatalogItem> GetCatalogItems();
+    IList<CatalogItem> GetCatalogItems();
     CatalogItem? GetCatalogItem(Guid catagItemId);
     void InsertCatalogItem(CatalogItem catalogItem);
     void UpdateCatalogItem(CatalogItem catalogItem);
