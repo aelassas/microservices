@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 
 namespace BackendGateway;
 
@@ -27,6 +29,14 @@ public static class Program
                 {
                     config.AddJsonFile("appsettings.Local.json", true, true);
                 }
+            })
+            .UseSerilog((_, config) =>
+            {
+                config
+                    .MinimumLevel.Information()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .Enrich.FromLogContext()
+                    .WriteTo.Console();
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {

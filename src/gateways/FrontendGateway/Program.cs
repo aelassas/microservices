@@ -2,6 +2,8 @@ using FrontendGateway;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 
 CreateHostBuilder(args).Build().Run();
 static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -20,6 +22,14 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             {
                 config.AddJsonFile("appsettings.Local.json", true, true);
             }
+        })
+        .UseSerilog((_, config) =>
+        {
+            config
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Console();
         })
         .ConfigureWebHostDefaults(webBuilder =>
         {
