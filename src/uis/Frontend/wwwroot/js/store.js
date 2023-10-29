@@ -74,7 +74,7 @@ window.onload = () => {
             window.localStorage.removeItem("auth");
             window.location = "/index.html";
         };
-    }, (err) => {
+    }, () => {
         window.location = "/index.html";
     });
 

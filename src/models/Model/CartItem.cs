@@ -2,6 +2,6 @@
 
 public class CartItem
 {
-    public CatalogItem? CatalogItem { get; set; }
+    public CatalogItem? CatalogItem { get; init; }
     public int Quantity { get; set; }
 }
