@@ -1,6 +1,5 @@
 ﻿using CatalogMicroservice.Model;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
 
 namespace CatalogMicroservice.Repository;
@@ -17,7 +16,7 @@ public class CatalogRepository : ICatalogRepository
     public IList<CatalogItem> GetCatalogItems() =>
         _col.Find(FilterDefinition<CatalogItem>.Empty).ToList();
 
-    public CatalogItem GetCatalogItem(Guid catalogItemId) =>
+    public CatalogItem GetCatalogItem(string catalogItemId) =>
         _col.Find(c => c.Id == catalogItemId).FirstOrDefault();
 
     public void InsertCatalogItem(CatalogItem catalogItem) =>
@@ -29,6 +28,6 @@ public class CatalogRepository : ICatalogRepository
             .Set(c => c.Description, catalogItem.Description)
             .Set(c => c.Price, catalogItem.Price));
 
-    public void DeleteCatalogItem(Guid catalogItemId) =>
+    public void DeleteCatalogItem(string catalogItemId) =>
         _col.DeleteOne(c => c.Id == catalogItemId);
 }

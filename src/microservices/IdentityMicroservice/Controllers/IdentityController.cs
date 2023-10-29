@@ -1,5 +1,6 @@
 ﻿using IdentityMicroservice.Model;
 using IdentityMicroservice.Repository;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Middleware;
 
@@ -44,7 +45,7 @@ public class IdentityController : ControllerBase
 
         var token = _jwtBuilder.GetToken(u.Id);
 
-        return new OkObjectResult(token);
+        return Ok(token);
     }
 
     [HttpPost("register")]
@@ -80,6 +81,6 @@ public class IdentityController : ControllerBase
             return BadRequest("Invalid token.");
         }
 
-        return new OkObjectResult(userId);
+        return Ok(userId);
     }
 }

@@ -11,10 +11,8 @@ window.onload = () => {
     }
 
     common.get(settings.uri + "identity/validate?email=" + encodeURIComponent(auth.email) + "&token=" + encodeURIComponent(auth.token), (userId) => {
-        userId = JSON.parse(userId);
-        common.get(settings.uri + "catalog", (catalogItems) => {
-            catalogItems = JSON.parse(catalogItems);
-
+        common.get(settings.uri + "catalog", (data) => {
+            const catalogItems = JSON.parse(data);
             const items = [];
             for (let i = 0; i < catalogItems.length; i++) {
                 const catalogItem = catalogItems[i];
@@ -74,7 +72,7 @@ window.onload = () => {
             window.localStorage.removeItem("auth");
             window.location = "/index.html";
         };
-    }, () => {
+    }, (err) => {
         window.location = "/index.html";
     });
 

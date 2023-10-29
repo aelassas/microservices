@@ -3,6 +3,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +28,10 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            options.OutputFormatters.RemoveType<StringOutputFormatter>();
+        });
         services.AddMongoDb(Configuration);
         services.AddSingleton<ICartRepository>(sp =>
           new CartRepository(sp.GetService<IMongoDatabase>() ?? throw new Exception("IMongoDatabase not found"))

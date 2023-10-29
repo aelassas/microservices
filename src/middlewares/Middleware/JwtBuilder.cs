@@ -17,13 +17,13 @@ public class JwtBuilder : IJwtBuilder
         _options = options.Value;
     }
 
-    public string GetToken(Guid userId)
+    public string GetToken(string userId)
     {
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Secret));
         var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
         var claims = new[]
         {
-            new Claim("userId", userId.ToString()),
+            new Claim("userId",userId)
         };
         var expirationDate = DateTime.Now.AddMinutes(_options.ExpiryMinutes);
         var jwt = new JwtSecurityToken(claims: claims, signingCredentials: signingCredentials, expires: expirationDate);
@@ -32,12 +32,12 @@ public class JwtBuilder : IJwtBuilder
         return encodedJwt;
     }
 
-    public Guid ValidateToken(string token)
+    public string ValidateToken(string token)
     {
         var principal = GetPrincipal(token);
         if (principal == null)
         {
-            return Guid.Empty;
+            return string.Empty;
         }
 
         ClaimsIdentity identity;
@@ -47,14 +47,14 @@ public class JwtBuilder : IJwtBuilder
         }
         catch (NullReferenceException)
         {
-            return Guid.Empty;
+            return string.Empty;
         }
         var userIdClaim = identity?.FindFirst("userId");
         if (userIdClaim == null)
         {
-            return Guid.Empty;
+            return string.Empty;
         }
-        var userId = new Guid(userIdClaim.Value);
+        var userId = new string(userIdClaim.Value);
         return userId;
     }
 

@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace Middleware;
+﻿namespace Middleware;
 
 public interface IJwtBuilder
 {
-    string GetToken(Guid userId);
-    Guid ValidateToken(string token);
+    string GetToken(string userId);
+    string ValidateToken(string token);
 }

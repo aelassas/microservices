@@ -1,6 +1,5 @@
 ﻿using CartMicroservice.Model;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,10 +14,10 @@ public class CartRepository : ICartRepository
         _col = db.GetCollection<Cart>(Cart.DocumentName);
     }
 
-    public IList<CartItem> GetCartItems(Guid userId) =>
+    public IList<CartItem> GetCartItems(string userId) =>
         _col.Find(c => c.UserId == userId).FirstOrDefault()?.CartItems ?? new List<CartItem>();
 
-    public void InsertCartItem(Guid userId, CartItem cartItem)
+    public void InsertCartItem(string userId, CartItem cartItem)
     {
         var cart = _col.Find(c => c.UserId == userId).FirstOrDefault();
         if (cart == null)
@@ -43,7 +42,7 @@ public class CartRepository : ICartRepository
         }
     }
 
-    public void UpdateCartItem(Guid userId, CartItem cartItem)
+    public void UpdateCartItem(string userId, CartItem cartItem)
     {
         var cart = _col.Find(c => c.UserId == userId).FirstOrDefault();
         if (cart != null)
@@ -56,7 +55,7 @@ public class CartRepository : ICartRepository
         }
     }
 
-    public void DeleteCartItem(Guid userId, Guid catalogItemId)
+    public void DeleteCartItem(string userId, string catalogItemId)
     {
         var cart = _col.Find(c => c.UserId == userId).FirstOrDefault();
         if (cart != null)

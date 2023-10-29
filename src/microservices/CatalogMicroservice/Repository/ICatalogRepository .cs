@@ -1,5 +1,4 @@
 ﻿using CatalogMicroservice.Model;
-using System;
 using System.Collections.Generic;
 
 namespace CatalogMicroservice.Repository;
@@ -7,8 +6,8 @@ namespace CatalogMicroservice.Repository;
 public interface ICatalogRepository
 {
     IList<CatalogItem> GetCatalogItems();
-    CatalogItem? GetCatalogItem(Guid catagItemId);
+    CatalogItem? GetCatalogItem(string catalogItemId);
     void InsertCatalogItem(CatalogItem catalogItem);
     void UpdateCatalogItem(CatalogItem catalogItem);
-    void DeleteCatalogItem(Guid catagItemId);
+    void DeleteCatalogItem(string catagItemId);
 }

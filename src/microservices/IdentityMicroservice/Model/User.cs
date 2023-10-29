@@ -1,5 +1,6 @@
 ﻿using Middleware;
-using System;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace IdentityMicroservice.Model;
 
@@ -7,7 +8,9 @@ public class User
 {
     public static readonly string DocumentName = "users";
 
-    public Guid Id { get; init; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; init; }
     public required string Email { get; init; }
     public required string Password { get; set; }
     public string? Salt { get; set; }
@@ -21,7 +24,7 @@ public class User
 
     public bool ValidatePassword(string password, IEncryptor encryptor)
     {
-        var isValid = Password.Equals(encryptor.GetHash(password, Salt));
+        var isValid = Password == encryptor.GetHash(password, Salt);
         return isValid;
     }
 }

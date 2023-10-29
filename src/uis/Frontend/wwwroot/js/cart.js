@@ -11,9 +11,8 @@ window.onload = () => {
     }
 
     common.get(settings.uri + "identity/validate?email=" + encodeURIComponent(auth.email) + "&token=" + encodeURIComponent(auth.token), function (userId) {
-        userId = JSON.parse(userId);
-        common.get(settings.uri + "cart?u=" + encodeURIComponent(userId), (cartItems) => {
-            cartItems = JSON.parse(cartItems);
+        common.get(settings.uri + "cart?u=" + encodeURIComponent(userId), (data) => {
+            const cartItems = JSON.parse(data);
 
             let items = [];
             for (let i = 0; i < cartItems.length; i++) {

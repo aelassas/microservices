@@ -13,9 +13,8 @@ window.onload = () => {
     common.get(settings.uri + "identity/validate?email=" + encodeURIComponent(auth.email) + "&token=" + encodeURIComponent(auth.token), () => {
         let modal;
         function loadCatalog() {
-            common.get(settings.uri + "catalog", (catalogItems) => {
-                catalogItems = JSON.parse(catalogItems);
-
+            common.get(settings.uri + "catalog", (data) => {
+                const catalogItems = JSON.parse(data);
                 const items = [];
                 for (let i = 0; i < catalogItems.length; i++) {
                     const catalogItem = catalogItems[i];

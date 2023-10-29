@@ -13,6 +13,7 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Rewrite;
 
 namespace FrontendGateway;
@@ -29,7 +30,10 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            options.OutputFormatters.RemoveType<StringOutputFormatter>();
+        });
 
         services.AddOcelot(Configuration);
 
