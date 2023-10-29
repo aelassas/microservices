@@ -33,8 +33,10 @@ public class CatalogRepository : ICatalogRepository
 
     public void DeleteCatalogItem(string catalogItemId)
     {
+        // Delete catalog item
         _col.DeleteOne(c => c.Id == catalogItemId);
 
+        // Delete catalog item references from carts
         var carts = _cartCol.Find(c => c.CartItems.Any(i => i.CatalogItem!.Id == catalogItemId)).ToList();
         foreach (var cart in carts)
         {
