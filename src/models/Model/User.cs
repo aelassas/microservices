@@ -6,7 +6,7 @@ namespace Model;
 
 public class User
 {
-    public static readonly string DocumentName = "User";
+    public static readonly string DocumentName = nameof(User);
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

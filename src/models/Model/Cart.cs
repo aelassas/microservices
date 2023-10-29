@@ -5,7 +5,7 @@ namespace Model;
 
 public class Cart
 {
-    public static readonly string DocumentName = "Cart";
+    public static readonly string DocumentName = nameof(Cart);
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

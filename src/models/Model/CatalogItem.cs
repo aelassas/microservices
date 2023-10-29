@@ -5,7 +5,7 @@ namespace Model;
 
 public class CatalogItem
 {
-    public static readonly string DocumentName = "CatalogItem";
+    public static readonly string DocumentName = nameof(CatalogItem);
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
