@@ -40,7 +40,7 @@ public class CatalogRepository : ICatalogRepository
         var carts = _cartCol.Find(c => c.CartItems.Any(i => i.CatalogItem!.Id == catalogItemId)).ToList();
         foreach (var cart in carts)
         {
-            cart.CartItems.RemoveAll(i => i.CatalogItem?.Id == catalogItemId);
+            cart.CartItems.RemoveAll(i => i.CatalogItem!.Id == catalogItemId);
             _cartCol.UpdateOne(c => c.Id == cart.Id, Builders<Cart>.Update.Set(c => c.CartItems, cart.CartItems));
         }
     }
