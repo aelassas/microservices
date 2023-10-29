@@ -6,7 +6,7 @@ window.onload = () => {
 
     const auth = JSON.parse(window.localStorage.getItem("auth"));
 
-    if (auth == null) {
+    if (!auth) {
         window.location = "/index.html";
     }
 

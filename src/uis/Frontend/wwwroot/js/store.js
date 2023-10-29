@@ -6,7 +6,7 @@ window.onload = () => {
 
     const auth = JSON.parse(window.localStorage.getItem("auth"));
 
-    if (auth == null) {
+    if (!auth) {
         window.location = "/index.html";
     }
 
@@ -15,7 +15,7 @@ window.onload = () => {
         common.get(settings.uri + "catalog", (catalogItems) => {
             catalogItems = JSON.parse(catalogItems);
 
-            let items = [];
+            const items = [];
             for (let i = 0; i < catalogItems.length; i++) {
                 const catalogItem = catalogItems[i];
                 items.push("<tr>"
@@ -26,7 +26,7 @@ window.onload = () => {
                     + "<td><input type='button' value='Add' class='add btn btn-primary' /></td>"
                     + "</tr>");
             }
-            let table = "<table class='table'>"
+            const table = "<table class='table'>"
                 + "<thead class='table-dark'>"
                 + "<tr>"
                 + "<th>Name</th>"
@@ -48,7 +48,7 @@ window.onload = () => {
                 addButton.onclick = () => {
                     const catalogItemId = row.querySelector(".id").innerHTML;
                     const catalogItemName = row.querySelector(".name").innerHTML;
-                    const catalogItemPrice = parseFloat(row.querySelector(".price").innerHTML.replace("$ ", ""));
+                    const catalogItemPrice = Number.parseFloat(row.querySelector(".price").innerHTML.replace("$ ", ""));
                     const quantity = 1;
 
                     const cartItem = {

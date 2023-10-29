@@ -38,7 +38,7 @@
     background: #fafafa;
 }
 
-.add {
+.submit {
     float: right;
 }
 
@@ -47,6 +47,10 @@
     top: 100px;
     right: 0;
     left: 0;
+}
+
+.remove {
+    margin-left: 10px;
 }
 
 .id {

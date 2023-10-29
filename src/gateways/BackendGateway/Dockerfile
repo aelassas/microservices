@@ -8,8 +8,8 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["src/gateways/BackendGateway/BackendGateway.csproj", "gateways/BackendGateway/"]
-RUN dotnet restore "gateways/BackendGateway/BackendGateway.csproj"
 COPY src/middlewares middlewares/
+RUN dotnet restore "gateways/BackendGateway/BackendGateway.csproj"
 
 WORKDIR "/src/gateways/BackendGateway"
 COPY src/gateways/BackendGateway .

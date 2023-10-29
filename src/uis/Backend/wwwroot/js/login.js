@@ -27,7 +27,7 @@ window.onload = () => {
         login();
     };
 
-    document.getElementById("password").onkeyup = function (e) {
+    document.getElementById("password").onkeyup = (e) => {
         if (e.key === 'Enter') {
             login();
         }

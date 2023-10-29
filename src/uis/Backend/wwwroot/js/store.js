@@ -6,29 +6,31 @@ window.onload = () => {
 
     const auth = JSON.parse(window.localStorage.getItem("auth"));
 
-    if (auth == null) {
+    if (!auth) {
         window.location = "/index.html";
     }
 
-    common.get(settings.uri + "identity/validate?email=" + encodeURIComponent(auth.email) + "&token=" + encodeURIComponent(auth.token), (userId) => {
-        userId = JSON.parse(userId);
-
+    common.get(settings.uri + "identity/validate?email=" + encodeURIComponent(auth.email) + "&token=" + encodeURIComponent(auth.token), () => {
+        let modal;
         function loadCatalog() {
             common.get(settings.uri + "catalog", (catalogItems) => {
                 catalogItems = JSON.parse(catalogItems);
 
-                let items = [];
+                const items = [];
                 for (let i = 0; i < catalogItems.length; i++) {
                     const catalogItem = catalogItems[i];
                     items.push("<tr>"
                         + "<td class='id'>" + catalogItem.id + "</td>"
                         + "<td class='name'>" + catalogItem.name + "</td>"
-                        + "<td>" + catalogItem.description + "</td>"
+                        + "<td class='desc'>" + catalogItem.description + "</td>"
                         + "<td class='price'>" + `$ ${catalogItem.price}` + "</td>"
-                        + "<td><input type='button' value='Remove' class='remove btn btn-danger' /></td>"
+                        + "<td>"
+                        + "<input type='button' value='Update' class='update btn btn-success' />"
+                        + "<input type='button' value='Remove' class='remove btn btn-danger' />"
+                        + "</td>"
                         + "</tr>");
                 }
-                let table = "<table class='table'>"
+                const table = "<table class='table'>"
                     + "<thead class='table-dark'>"
                     + "<tr>"
                     + "<th>Name</th>"
@@ -44,6 +46,7 @@ window.onload = () => {
                 document.querySelector(".catalog").innerHTML = table;
 
                 const rows = document.querySelector(".catalog").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
                 for (let i = 0; i < rows.length; i++) {
                     const row = rows[i];
                     const removeButton = row.querySelector(".remove");
@@ -56,6 +59,59 @@ window.onload = () => {
                             alert("Error while removing item.");
                         }, auth.token);
                     };
+                    row.querySelector(".update").onclick = () => {
+                        if (modal) {
+                            modal.destroy();
+                        }
+
+                        modal = new jBox("Modal", {
+                            width: 800,
+                            height: 420,
+                            title: "Update Catalog Item",
+                            content: document.getElementById("item").innerHTML,
+                            footer: document.getElementById("item-footer").innerHTML,
+                            overlay: true,
+                            delayOpen: 0,
+                            onOpen: () => {
+                                const jBoxContent = document.getElementsByClassName("jBox-content")[0];
+                                const jBoxFooter = document.getElementsByClassName("jBox-footer")[0];
+                                const submitButton = jBoxFooter.querySelector(".submit");
+
+                                jBoxContent.querySelector(".name").value = row.querySelector(".name").innerHTML;
+                                jBoxContent.querySelector(".desc").value = row.querySelector(".desc").innerHTML;
+                                jBoxContent.querySelector(".price").value = row.querySelector(".price").innerHTML.replace("$ ", "");
+
+                                submitButton.onclick = () => {
+                                    const id = row.querySelector(".id").innerHTML;
+                                    const name = jBoxContent.querySelector(".name").value;
+                                    const desc = jBoxContent.querySelector(".desc").value;
+                                    const price = Number.parseFloat(jBoxContent.querySelector(".price").value);
+
+                                    if (name !== "" && desc !== "") {
+                                        const catalogItem = {
+                                            "id": id,
+                                            "name": name,
+                                            "description": desc,
+                                            "price": price
+                                        };
+
+                                        common.put(settings.uri + "catalog", () => {
+                                            modal.destroy();
+                                            loadCatalog();
+                                        }, () => {
+                                            alert("Error while updating catalog item.");
+                                        }, catalogItem, auth.token);
+                                    } else {
+                                        alert("Error: Empty values.");
+                                    }
+                                };
+                            },
+                            onClose: () => {
+                            }
+                        });
+
+                        modal.open();
+                    };
                 }
 
             }, () => {
@@ -65,7 +121,6 @@ window.onload = () => {
 
         loadCatalog();
 
-        let modal;
         document.getElementById("add").onclick = () => {
             if (modal) {
                 modal.destroy();
@@ -74,19 +129,19 @@ window.onload = () => {
             modal = new jBox("Modal", {
                 width: 800,
                 height: 420,
-                title: "New catalog item",
+                title: "New Catalog Item",
                 content: document.getElementById("item").innerHTML,
                 footer: document.getElementById("item-footer").innerHTML,
                 overlay: true,
                 delayOpen: 0,
                 onOpen: () => {
-                    let jBoxContent = document.getElementsByClassName("jBox-content")[0];
-                    let jBoxFooter = document.getElementsByClassName("jBox-footer")[0];
-                    const addButton = jBoxFooter.querySelector(".add");
-                    addButton.onclick = () => {
+                    const jBoxContent = document.getElementsByClassName("jBox-content")[0];
+                    const jBoxFooter = document.getElementsByClassName("jBox-footer")[0];
+                    const submitButton = jBoxFooter.querySelector(".submit");
+                    submitButton.onclick = () => {
                         const name = jBoxContent.querySelector(".name").value;
                         const desc = jBoxContent.querySelector(".desc").value;
-                        const price = parseFloat(jBoxContent.querySelector(".price").value);
+                        const price = Number.parseFloat(jBoxContent.querySelector(".price").value);
 
                         if (name !== "" && desc !== "") {
                             const catalogItem = {
@@ -99,7 +154,7 @@ window.onload = () => {
                                 modal.destroy();
                                 loadCatalog();
                             }, () => {
-                                alert("Error while create catalog item.");
+                                alert("Error while creating catalog item.");
                             }, catalogItem, auth.token);
                         } else {
                             alert("Error: Empty values.");
@@ -107,7 +162,6 @@ window.onload = () => {
                     };
                 },
                 onClose: () => {
-
                 }
             });
 
