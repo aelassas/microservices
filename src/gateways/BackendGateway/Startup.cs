@@ -83,7 +83,7 @@ public class Startup
             app.UseDeveloperExceptionPage();
         }
 
-        app.UseMiddleware<RequestResponseLoggingMiddleware>();
+        app.UseMiddleware<RequestResponseLogging>();
 
         app.UseCors("CorsPolicy");
 
