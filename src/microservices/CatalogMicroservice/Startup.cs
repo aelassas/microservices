@@ -28,10 +28,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers(options =>
-        {
-            options.OutputFormatters.RemoveType<StringOutputFormatter>();
-        });
+        services.AddControllers();
         services.AddMongoDb(Configuration);
         services.AddSingleton<ICatalogRepository>(sp =>
           new CatalogRepository(sp.GetService<IMongoDatabase>() ?? throw new Exception("IMongoDatabase not found"))

@@ -23,7 +23,7 @@ public class CatalogController : ControllerBase
         return Ok(catalogItems);
     }
 
-    // GET api/<CatalogController>/110ec627-2f05-4a7e-9a95-7a91e8005da8
+    // GET api/<CatalogController>/653e4410614d711b7fc953a7
     [HttpGet("{id}")]
     public IActionResult Get(string id)
     {
@@ -51,7 +51,7 @@ public class CatalogController : ControllerBase
         return new NoContentResult();
     }
 
-    // DELETE api/<CatalogController>/110ec627-2f05-4a7e-9a95-7a91e8005da8
+    // DELETE api/<CatalogController>/653e4410614d711b7fc953a7
     [HttpDelete("{id}")]
     public IActionResult Delete(string id)
     {
