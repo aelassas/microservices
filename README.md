@@ -63,7 +63,7 @@ The backend allows admin users to see the available catalog items, allows to add
 
 # How to Run the Application
 
-You can run the application using IISExpress in Visual Studio 2022.
+You can run the application using IISExpress in Visual Studio 2022 or Docker.
 
 You will need to install MongoDB if it is not installed.
 
@@ -87,6 +87,8 @@ To login to the backend for the first time, you will need to create an admin use
 }
 ```
 Finally, you can login to the backend with the admin user you created and create new products.
+
+If you want to modify MongoDB connection string, you need to update *appsettings.json* of microservices and gateways.
 
 # Further Reading
 
