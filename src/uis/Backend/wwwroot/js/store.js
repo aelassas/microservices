@@ -16,8 +16,7 @@ window.onload = () => {
             common.get(settings.uri + "catalog", (data) => {
                 const catalogItems = JSON.parse(data);
                 const items = [];
-                for (let i = 0; i < catalogItems.length; i++) {
-                    const catalogItem = catalogItems[i];
+                for (const catalogItem of catalogItems) {
                     items.push("<tr>"
                         + "<td class='id'>" + catalogItem.id + "</td>"
                         + "<td class='name'>" + catalogItem.name + "</td>"
@@ -46,8 +45,7 @@ window.onload = () => {
 
                 const rows = document.querySelector(".catalog").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
 
-                for (let i = 0; i < rows.length; i++) {
-                    const row = rows[i];
+                for (const row of rows) {
                     const removeButton = row.querySelector(".remove");
                     removeButton.onclick = () => {
                         const catalogItemId = row.querySelector(".id").innerHTML;

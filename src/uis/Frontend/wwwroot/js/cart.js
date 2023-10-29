@@ -15,12 +15,11 @@ window.onload = () => {
             const cartItems = JSON.parse(data);
 
             let items = [];
-            for (let i = 0; i < cartItems.length; i++) {
-                const cartItem = cartItems[i];
+            for (const cartItem of cartItems) {
                 items.push("<tr>"
-                    + "<td class='id'>" + cartItem.catalogItemId + "</td>"
-                    + "<td class='name'>" + cartItem.catalogItemName + "</td>"
-                    + "<td class='price'>" + cartItem.catalogItemPrice + "</td>"
+                    + "<td class='id'>" + cartItem.catalogItem.id + "</td>"
+                    + "<td class='name'>" + cartItem.catalogItem.name + "</td>"
+                    + "<td class='price'>" + `$ ${cartItem.catalogItem.price}` + "</td>"
                     + "<td>" + cartItem.quantity + "</td>"
                     + "<td><input type='button' value='Remove' class='remove btn btn-danger' /></td>"
                     + "</tr>");
@@ -41,8 +40,7 @@ window.onload = () => {
             document.querySelector(".cart").innerHTML = table;
 
             const rows = document.querySelector(".cart").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
+            for (const row of rows) {
                 const removeButton = row.querySelector(".remove");
                 removeButton.onclick = () => {
                     const catalogItemId = row.querySelector(".id").innerHTML;

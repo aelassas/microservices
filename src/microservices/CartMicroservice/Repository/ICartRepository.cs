@@ -1,4 +1,4 @@
-﻿using CartMicroservice.Model;
+﻿using Model;
 using System.Collections.Generic;
 
 namespace CartMicroservice.Repository;

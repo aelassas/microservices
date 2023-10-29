@@ -14,12 +14,11 @@ window.onload = () => {
         common.get(settings.uri + "catalog", (data) => {
             const catalogItems = JSON.parse(data);
             const items = [];
-            for (let i = 0; i < catalogItems.length; i++) {
-                const catalogItem = catalogItems[i];
+            for (const catalogItem of catalogItems) {
                 items.push("<tr>"
                     + "<td class='id'>" + catalogItem.id + "</td>"
                     + "<td class='name'>" + catalogItem.name + "</td>"
-                    + "<td>" + catalogItem.description + "</td>"
+                    + "<td class='desc'>" + catalogItem.description + "</td>"
                     + "<td class='price'>" + `$ ${catalogItem.price}` + "</td>"
                     + "<td><input type='button' value='Add' class='add btn btn-primary' /></td>"
                     + "</tr>");
@@ -40,19 +39,22 @@ window.onload = () => {
             document.querySelector(".catalog").innerHTML = table;
 
             const rows = document.querySelector(".catalog").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
+            for (const row of rows) {
                 const addButton = row.querySelector(".add");
                 addButton.onclick = () => {
                     const catalogItemId = row.querySelector(".id").innerHTML;
                     const catalogItemName = row.querySelector(".name").innerHTML;
+                    const catalogItemDesc = row.querySelector(".desc").innerHTML;
                     const catalogItemPrice = Number.parseFloat(row.querySelector(".price").innerHTML.replace("$ ", ""));
                     const quantity = 1;
 
                     const cartItem = {
-                        "catalogItemId": catalogItemId,
-                        "catalogItemName": catalogItemName,
-                        "catalogItemPrice": catalogItemPrice,
+                        "catalogItem": {
+                            "id": catalogItemId,
+                            "name": catalogItemName,
+                            "Description": catalogItemDesc,
+                            "price": catalogItemPrice
+                        },
                         "quantity": quantity
                     };
 

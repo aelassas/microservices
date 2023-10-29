@@ -1,10 +1,10 @@
 using IdentityMicroservice.Controllers;
-using IdentityMicroservice.Model;
 using IdentityMicroservice.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Middleware;
+using Model;
 using Moq;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 

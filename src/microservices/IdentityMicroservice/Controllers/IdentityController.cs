@@ -1,8 +1,7 @@
-﻿using IdentityMicroservice.Model;
-using IdentityMicroservice.Repository;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using IdentityMicroservice.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Middleware;
+using Model;
 
 namespace IdentityMicroservice.Controllers;
 

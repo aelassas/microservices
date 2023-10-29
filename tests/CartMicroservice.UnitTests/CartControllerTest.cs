@@ -1,7 +1,7 @@
 using CartMicroservice.Controllers;
-using CartMicroservice.Model;
 using CartMicroservice.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Model;
 using Moq;
 
 namespace CartMicroservice.UnitTests;
@@ -20,16 +20,22 @@ public class CartControllerTest
             {
                 new()
                 {
-                    CatalogItemId = A54Id,
-                    CatalogItemName = "Samsung Galaxy A54 5G",
-                    CatalogItemPrice = 500,
+                    CatalogItem = new()
+                    {
+                        Id = A54Id,
+                        Name = "Samsung Galaxy A54 5G",
+                        Price = 500,
+                    },
                     Quantity = 1
                 },
                 new()
                 {
-                    CatalogItemId = A14Id,
-                    CatalogItemName = "Samsung Galaxy A14 5G",
-                    CatalogItemPrice = 200,
+                    CatalogItem = new()
+                    {
+                        Id = A14Id,
+                        Name = "Samsung Galaxy A14 5G",
+                        Price = 200,
+                    },
                     Quantity = 2
                 }
             }
@@ -58,11 +64,11 @@ public class CartControllerTest
             {
                 if (_cartItems.TryGetValue(userId, out var items))
                 {
-                    var currentItem = items.FirstOrDefault(i => i.CatalogItemId == item.CatalogItemId);
+                    var currentItem = items.FirstOrDefault(i => i.CatalogItem?.Id == item.CatalogItem?.Id);
                     if (currentItem != null)
                     {
-                        currentItem.CatalogItemName = item.CatalogItemName;
-                        currentItem.CatalogItemPrice = item.CatalogItemPrice;
+                        currentItem.CatalogItem!.Name = item.CatalogItem!.Name;
+                        currentItem.CatalogItem.Price = item.CatalogItem!.Price;
                         currentItem.Quantity = item.Quantity;
                     }
                 }
@@ -72,7 +78,7 @@ public class CartControllerTest
             {
                 if (_cartItems.TryGetValue(userId, out var items))
                 {
-                    items.RemoveAll(i => i.CatalogItemId == catalogItemId);
+                    items.RemoveAll(i => i.CatalogItem?.Id == catalogItemId);
                 }
             });
         _controller = new CartController(mockRepo.Object);
@@ -94,14 +100,17 @@ public class CartControllerTest
             UserId,
             new CartItem
             {
-                CatalogItemId = A54Id,
-                CatalogItemName = "Samsung Galaxy A54 5G",
-                CatalogItemPrice = 500,
+                CatalogItem = new()
+                {
+                    Id = A54Id,
+                    Name = "Samsung Galaxy A54 5G",
+                    Price = 500,
+                },
                 Quantity = 1
             }
         );
         Assert.IsType<OkResult>(okObjectResult);
-        Assert.NotNull(_cartItems[UserId].FirstOrDefault(i => i.CatalogItemId == A54Id));
+        Assert.NotNull(_cartItems[UserId].FirstOrDefault(i => i.CatalogItem?.Id == A54Id));
     }
 
     [Fact]
@@ -112,17 +121,20 @@ public class CartControllerTest
             UserId,
             new CartItem
             {
-                CatalogItemId = catalogItemId,
-                CatalogItemName = "Samsung Galaxy A54",
-                CatalogItemPrice = 550,
+                CatalogItem = new()
+                {
+                    Id = A54Id,
+                    Name = "Samsung Galaxy A54",
+                    Price = 550,
+                },
                 Quantity = 2
             }
         );
         Assert.IsType<OkResult>(okObjectResult);
-        var catalogItem = _cartItems[UserId].FirstOrDefault(i => i.CatalogItemId == catalogItemId);
+        var catalogItem = _cartItems[UserId].FirstOrDefault(i => i.CatalogItem?.Id == catalogItemId);
         Assert.NotNull(catalogItem);
-        Assert.Equal("Samsung Galaxy A54", catalogItem.CatalogItemName);
-        Assert.Equal(550, catalogItem.CatalogItemPrice);
+        Assert.Equal("Samsung Galaxy A54", catalogItem.CatalogItem!.Name);
+        Assert.Equal(550, catalogItem.CatalogItem.Price);
         Assert.Equal(2, catalogItem.Quantity);
     }
 
@@ -131,11 +143,11 @@ public class CartControllerTest
     {
         var id = A14Id;
         var items = _cartItems[UserId];
-        var item = items.FirstOrDefault(i => i.CatalogItemId == id);
+        var item = items.FirstOrDefault(i => i.CatalogItem?.Id == id);
         Assert.NotNull(item);
         var okObjectResult = _controller.Delete(UserId, id);
         Assert.IsType<OkResult>(okObjectResult);
-        item = items.FirstOrDefault(i => i.CatalogItemId == id);
+        item = items.FirstOrDefault(i => i.CatalogItem?.Id == id);
         Assert.Null(item);
     }
 }

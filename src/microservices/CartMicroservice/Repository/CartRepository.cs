@@ -1,4 +1,4 @@
-﻿using CartMicroservice.Model;
+﻿using Model;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +27,8 @@ public class CartRepository : ICartRepository
         }
         else
         {
-            var cartItemFromDb = cart.CartItems.FirstOrDefault(ci => ci.CatalogItemId == cartItem.CatalogItemId);
+            var cartItemFromDb = cart.CartItems.FirstOrDefault(ci => ci.CatalogItem!.Id == cartItem.CatalogItem?.Id);
+
             if (cartItemFromDb == null)
             {
                 cart.CartItems.Add(cartItem);
@@ -47,7 +48,7 @@ public class CartRepository : ICartRepository
         var cart = _col.Find(c => c.UserId == userId).FirstOrDefault();
         if (cart != null)
         {
-            cart.CartItems.RemoveAll(ci => ci.CatalogItemId == cartItem.CatalogItemId);
+            cart.CartItems.RemoveAll(ci => ci.CatalogItem!.Id == cartItem.CatalogItem?.Id);
             cart.CartItems.Add(cartItem);
             var update = Builders<Cart>.Update
                 .Set(c => c.CartItems, cart.CartItems);
@@ -60,7 +61,7 @@ public class CartRepository : ICartRepository
         var cart = _col.Find(c => c.UserId == userId).FirstOrDefault();
         if (cart != null)
         {
-            cart.CartItems.RemoveAll(ci => ci.CatalogItemId == catalogItemId);
+            cart.CartItems.RemoveAll(ci => ci.CatalogItem!.Id == catalogItemId);
             var update = Builders<Cart>.Update
                 .Set(c => c.CartItems, cart.CartItems);
             _col.UpdateOne(c => c.UserId == userId, update);

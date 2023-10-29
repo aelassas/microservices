@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\middlewares\Middleware\Middleware.csproj" />
+    <ProjectReference Include="..\..\models\Model\Model.csproj" />
   </ItemGroup>
 
 

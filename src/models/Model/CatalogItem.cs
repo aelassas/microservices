@@ -1,11 +1,11 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace CatalogMicroservice.Model;
+namespace Model;
 
 public class CatalogItem
 {
-    public static readonly string DocumentName = "catalogItems";
+    public static readonly string DocumentName = "CatalogItem";
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

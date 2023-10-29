@@ -1,6 +1,6 @@
-﻿using CartMicroservice.Model;
-using CartMicroservice.Repository;
+﻿using CartMicroservice.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Model;
 
 namespace CartMicroservice.Controllers;
 

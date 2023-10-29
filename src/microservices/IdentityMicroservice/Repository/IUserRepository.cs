@@ -1,4 +1,4 @@
-﻿using IdentityMicroservice.Model;
+﻿using Model;
 
 namespace IdentityMicroservice.Repository;
 

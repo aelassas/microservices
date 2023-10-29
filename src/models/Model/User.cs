@@ -2,11 +2,11 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace IdentityMicroservice.Model;
+namespace Model;
 
 public class User
 {
-    public static readonly string DocumentName = "users";
+    public static readonly string DocumentName = "User";
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

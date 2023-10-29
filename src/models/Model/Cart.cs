@@ -1,12 +1,11 @@
 ﻿using MongoDB.Bson;
-using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace CartMicroservice.Model;
+namespace Model;
 
 public class Cart
 {
-    public static readonly string DocumentName = "carts";
+    public static readonly string DocumentName = "Cart";
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
