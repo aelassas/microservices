@@ -49,7 +49,7 @@ public class RequestResponseLoggingMiddleware
         await responseBody.CopyToAsync(originalBodyStream);
     }
 
-    private async Task<string> FormatRequest(HttpRequest request)
+    private static async Task<string> FormatRequest(HttpRequest request)
     {
         using var reader = new StreamReader(
             request.Body,
@@ -62,7 +62,7 @@ public class RequestResponseLoggingMiddleware
         return formattedRequest;
     }
 
-    private async Task<string> FormatResponse(HttpResponse response)
+    private static async Task<string> FormatResponse(HttpResponse response)
     {
         response.Body.Seek(0, SeekOrigin.Begin);
         string text = await new StreamReader(response.Body).ReadToEndAsync();

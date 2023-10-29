@@ -9,8 +9,8 @@ namespace CatalogMicroservice.UnitTests;
 public class CatalogControllerTest
 {
     private readonly CatalogController _controller;
-    private static readonly Guid A54Id = new("ce2dbb82-6689-487b-9691-0a05ebabce4a");
-    private static readonly Guid A14Id = new("ecf6bcac-9286-457b-b2e0-c1b1bc9849c6");
+    private static readonly string A54Id = "653e4410614d711b7fc953a7";
+    private static readonly string A14Id = "253e4410614d711b7fc953a7";
     private readonly List<CatalogItem> _items = new()
     {
         new()
@@ -33,8 +33,8 @@ public class CatalogControllerTest
     {
         var mockRepo = new Mock<ICatalogRepository>();
         mockRepo.Setup(repo => repo.GetCatalogItems()).Returns(_items);
-        mockRepo.Setup(repo => repo.GetCatalogItem(It.IsAny<Guid>()))
-            .Returns<Guid>(id => _items.FirstOrDefault(i => i.Id == id));
+        mockRepo.Setup(repo => repo.GetCatalogItem(It.IsAny<string>()))
+            .Returns<string>(id => _items.FirstOrDefault(i => i.Id == id));
         mockRepo.Setup(repo => repo.InsertCatalogItem(It.IsAny<CatalogItem>()))
             .Callback<CatalogItem>(_items.Add);
         mockRepo.Setup(repo => repo.UpdateCatalogItem(It.IsAny<CatalogItem>()))
@@ -48,8 +48,8 @@ public class CatalogControllerTest
                     item.Price = i.Price;
                 }
             });
-        mockRepo.Setup(repo => repo.DeleteCatalogItem(It.IsAny<Guid>()))
-            .Callback<Guid>(id => _items.RemoveAll(i => i.Id == id));
+        mockRepo.Setup(repo => repo.DeleteCatalogItem(It.IsAny<string>()))
+            .Callback<string>(id => _items.RemoveAll(i => i.Id == id));
         _controller = new CatalogController(mockRepo.Object);
     }
 
@@ -78,7 +78,7 @@ public class CatalogControllerTest
         var createdResponse = _controller.Post(
             new CatalogItem
             {
-                Id = Guid.NewGuid(),
+                Id = "353e4410614d711b7fc953a7",
                 Name = "iPhone 15",
                 Description = "iPhone 15 mobile phone",
                 Price = 1500

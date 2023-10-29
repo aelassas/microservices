@@ -13,11 +13,11 @@ namespace IdentityMicroservice.UnitTests;
 public class IdentityControllerTest
 {
     private readonly IdentityController _controller;
-    private static readonly Guid AdminUserId = new("429db8e4-9610-4a4a-acaf-22cb47aa64bf");
-    private static readonly Guid FrontendUserId = new("429db8e4-9610-4a4a-acaf-22cb47aa64bf");
+    private static readonly string AdminUserId = "653e4410614d711b7fc951a7";
+    private static readonly string FrontendUserId = "653e4410614d711b7fc952a7";
     private static readonly User UnknownUser = new()
     {
-        Id = new Guid("954603ed-4044-4bcf-9190-41d959d45394"),
+        Id = "653e4410614d711b7fc957a7",
         Email = "unknown@store.com",
         Password = "4kg245EBBE+1IF20pKSBafiNhE/+WydWZo41cfThUqh7tz7+n7Yn9w==",
         Salt = "2lApH7EgXLHjYAvlmPIDAaQ5ypyXlH8PBVmOI+0zhMBu5HxZqIH7+w==",
@@ -130,7 +130,7 @@ public class IdentityControllerTest
         // Success (new user)
         user = new User
         {
-            Id = Guid.NewGuid(),
+            Id ="145e4410614d711b7fc952a7",
             Email = "ctaylor@store.com",
             Password = "cccccc",
             IsAdmin = false
@@ -165,7 +165,7 @@ public class IdentityControllerTest
         Assert.NotEmpty(token);
         okObjectResult = _controller.Validate(user.Email, token);
         okResult = Assert.IsType<OkObjectResult>(okObjectResult);
-        var userId = Assert.IsType<Guid>(okResult.Value);
+        var userId = Assert.IsType<string>(okResult.Value);
         Assert.Equal(user.Id, userId);
     }
 }

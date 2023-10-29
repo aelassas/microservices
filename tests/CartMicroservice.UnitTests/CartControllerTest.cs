@@ -9,10 +9,10 @@ namespace CartMicroservice.UnitTests;
 public class CartControllerTest
 {
     private readonly CartController _controller;
-    private static readonly Guid UserId = new("ae4c07fc-fc81-4798-81ed-5a773787fe30");
-    private static readonly Guid A54Id = new("ce2dbb82-6689-487b-9691-0a05ebabce4a");
-    private static readonly Guid A14Id = new("ecf6bcac-9286-457b-b2e0-c1b1bc9849c6");
-    private readonly Dictionary<Guid, List<CartItem>> _cartItems = new()
+    private static readonly string UserId = "653e43b8c76b6b56a720803e";
+    private static readonly string A54Id = "653e4410614d711b7fc953a7";
+    private static readonly string A14Id = "253e4410614d711b7fc953a7";
+    private readonly Dictionary<string, List<CartItem>> _cartItems = new()
     {
         {
             UserId,
@@ -39,10 +39,10 @@ public class CartControllerTest
     public CartControllerTest()
     {
         var mockRepo = new Mock<ICartRepository>();
-        mockRepo.Setup(repo => repo.GetCartItems(It.IsAny<Guid>()))
-            .Returns<Guid>(id => _cartItems[id]);
-        mockRepo.Setup(repo => repo.InsertCartItem(It.IsAny<Guid>(), It.IsAny<CartItem>()))
-            .Callback<Guid, CartItem>((userId, item) =>
+        mockRepo.Setup(repo => repo.GetCartItems(It.IsAny<string>()))
+            .Returns<string>(id => _cartItems[id]);
+        mockRepo.Setup(repo => repo.InsertCartItem(It.IsAny<string>(), It.IsAny<CartItem>()))
+            .Callback<string, CartItem>((userId, item) =>
             {
                 if (_cartItems.TryGetValue(userId, out var items))
                 {
@@ -53,8 +53,8 @@ public class CartControllerTest
                     _cartItems.Add(userId, new List<CartItem> { item });
                 }
             });
-        mockRepo.Setup(repo => repo.UpdateCartItem(It.IsAny<Guid>(), It.IsAny<CartItem>()))
-            .Callback<Guid, CartItem>((userId, item) =>
+        mockRepo.Setup(repo => repo.UpdateCartItem(It.IsAny<string>(), It.IsAny<CartItem>()))
+            .Callback<string, CartItem>((userId, item) =>
             {
                 if (_cartItems.TryGetValue(userId, out var items))
                 {
@@ -67,8 +67,8 @@ public class CartControllerTest
                     }
                 }
             });
-        mockRepo.Setup(repo => repo.DeleteCartItem(It.IsAny<Guid>(), It.IsAny<Guid>()))
-            .Callback<Guid, Guid>((userId, catalogItemId) =>
+        mockRepo.Setup(repo => repo.DeleteCartItem(It.IsAny<string>(), It.IsAny<string>()))
+            .Callback<string, string>((userId, catalogItemId) =>
             {
                 if (_cartItems.TryGetValue(userId, out var items))
                 {
@@ -90,19 +90,18 @@ public class CartControllerTest
     [Fact]
     public void InsertCartItemTest()
     {
-        var catalogItemId = Guid.NewGuid();
         var okObjectResult = _controller.Post(
             UserId,
             new CartItem
             {
-                CatalogItemId = catalogItemId,
-                CatalogItemName = "Samsung Galaxy S23 Ultra",
-                CatalogItemPrice = 1500,
+                CatalogItemId = A54Id,
+                CatalogItemName = "Samsung Galaxy A54 5G",
+                CatalogItemPrice = 500,
                 Quantity = 1
             }
         );
         Assert.IsType<OkResult>(okObjectResult);
-        Assert.NotNull(_cartItems[UserId].FirstOrDefault(i => i.CatalogItemId == catalogItemId));
+        Assert.NotNull(_cartItems[UserId].FirstOrDefault(i => i.CatalogItemId == A54Id));
     }
 
     [Fact]
