@@ -18,7 +18,6 @@ public class CartRepository : ICartRepository
     public IList<CartItem> GetCartItems(Guid userId) =>
         _col.Find(c => c.UserId == userId).FirstOrDefault()?.CartItems ?? new List<CartItem>();
 
-
     public void InsertCartItem(Guid userId, CartItem cartItem)
     {
         var cart = _col.Find(c => c.UserId == userId).FirstOrDefault();
