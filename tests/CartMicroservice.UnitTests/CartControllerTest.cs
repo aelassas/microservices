@@ -16,7 +16,7 @@ public class CartControllerTest
     {
         {
             UserId,
-            new List<CartItem>
+            new()
             {
                 new()
                 {
