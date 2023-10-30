@@ -4,7 +4,7 @@ import common from "./common.js";
 window.onload = () => {
     "use strict";
 
-    window.localStorage.removeItem("auth");
+    localStorage.removeItem("auth");
 
     function login() {
         const user = {
@@ -17,7 +17,7 @@ window.onload = () => {
                 "email": user.email,
                 "token": token
             };
-            window.localStorage.setItem("auth", JSON.stringify(auth));
+            localStorage.setItem("auth", JSON.stringify(auth));
             window.location = "/store.html";
         }, () => {
             alert("Wrong credentials.");

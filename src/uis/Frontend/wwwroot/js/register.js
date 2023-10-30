@@ -21,7 +21,7 @@ window.onload = () => {
                         "email": user.email,
                         "token": token
                     };
-                    window.localStorage.setItem("auth", JSON.stringify(auth));
+                    localStorage.setItem("auth", JSON.stringify(auth));
                     window.location = "/store.html";
                 }, () => {
                     alert("Login error.");

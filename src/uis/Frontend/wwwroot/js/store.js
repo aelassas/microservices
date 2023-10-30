@@ -4,7 +4,7 @@ import common from "./common.js";
 window.onload = () => {
     "use strict";
 
-    const auth = JSON.parse(window.localStorage.getItem("auth"));
+    const auth = JSON.parse(localStorage.getItem("auth"));
 
     if (!auth) {
         window.location = "/index.html";
@@ -71,7 +71,7 @@ window.onload = () => {
         }, auth.token);
 
         document.getElementById("logout").onclick = () => {
-            window.localStorage.removeItem("auth");
+            localStorage.removeItem("auth");
             window.location = "/index.html";
         };
     }, () => {
