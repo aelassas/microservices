@@ -7,7 +7,7 @@ window.onload = () => {
     const auth = JSON.parse(localStorage.getItem("auth"));
 
     if (!auth) {
-        window.location = "/index.html";
+        location.href = "/index.html";
     }
 
     common.get(settings.uri + "identity/validate?email=" + encodeURIComponent(auth.email) + "&token=" + encodeURIComponent(auth.token), (userId) => {
@@ -72,10 +72,10 @@ window.onload = () => {
 
         document.getElementById("logout").onclick = () => {
             localStorage.removeItem("auth");
-            window.location = "/index.html";
+            location.href = "/index.html";
         };
     }, () => {
-        window.location = "/index.html";
+        location.href = "/index.html";
     });
 
 };

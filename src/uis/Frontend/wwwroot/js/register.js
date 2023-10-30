@@ -22,7 +22,7 @@ window.onload = () => {
                         "token": token
                     };
                     localStorage.setItem("auth", JSON.stringify(auth));
-                    window.location = "/store.html";
+                    location.href = "/store.html";
                 }, () => {
                     alert("Login error.");
                 }, user);

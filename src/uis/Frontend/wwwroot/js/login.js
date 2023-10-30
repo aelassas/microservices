@@ -18,7 +18,7 @@ window.onload = () => {
                 "token": token
             };
             localStorage.setItem("auth", JSON.stringify(auth));
-            window.location = "/store.html";
+            location.href = "/store.html";
         }, () => {
             alert("Wrong credentials.");
         }, user);
@@ -35,6 +35,6 @@ window.onload = () => {
     };
 
     document.getElementById("register").onclick = () => {
-        window.location = "/register.html";
+        location.href = "/register.html";
     };
 };
