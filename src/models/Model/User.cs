@@ -22,9 +22,6 @@ public class User
         Password = encryptor.GetHash(password, Salt);
     }
 
-    public bool ValidatePassword(string password, IEncryptor encryptor)
-    {
-        var isValid = Password == encryptor.GetHash(password, Salt);
-        return isValid;
-    }
+    public bool ValidatePassword(string password, IEncryptor encryptor) =>
+        Password == encryptor.GetHash(password, Salt);
 }
