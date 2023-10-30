@@ -54,7 +54,7 @@ public class JwtBuilder : IJwtBuilder
         {
             return string.Empty;
         }
-        var userId = new string(userIdClaim.Value);
+        var userId = userIdClaim.Value;
         return userId;
     }
 
