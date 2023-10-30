@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace Middleware;
 
-public class Encryptor: IEncryptor
+public class Encryptor : IEncryptor
 {
     private const int SALT_SIZE = 40;
     private const int ITERATIONS_COUNT = 10000;

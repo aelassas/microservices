@@ -130,7 +130,7 @@ public class IdentityControllerTest
         // Success (new user)
         user = new User
         {
-            Id ="145e4410614d711b7fc952a7",
+            Id = "145e4410614d711b7fc952a7",
             Email = "ctaylor@store.com",
             Password = "cccccc",
             IsAdmin = false
