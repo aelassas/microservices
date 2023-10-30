@@ -67,7 +67,7 @@ You can run the application using IISExpress in Visual Studio 2022 or Docker.
 
 You will need to install MongoDB if it is not installed.
 
-First, right click on the solution, click on properties and select multiple startup projects. Select all the projects as startup projects except Middleware project.
+First, right click on the solution, click on properties and select multiple startup projects. Select all the projects as startup projects except Middleware, Model and unit tests projects.
 
 Then, press **F5** to run the application.
 
