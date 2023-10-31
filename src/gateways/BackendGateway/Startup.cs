@@ -32,27 +32,7 @@ public class Startup
 
         services.AddOcelot(Configuration);
 
-        var jwtSection = Configuration.GetSection("jwt");
-        var jwtOptions = jwtSection.Get<JwtOptions>();
-        var key = Encoding.UTF8.GetBytes(jwtOptions.Secret);
-
-        services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+        services.AddJwtAuthentication(Configuration); // JWT Configuration
 
         services.AddCors(options =>
         {
