@@ -49,7 +49,6 @@ public static class Extentions
             });
     }
 
-
     public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var section = configuration.GetSection("jwt");
@@ -85,7 +84,6 @@ public static class Extentions
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
                 .Build();
-
         });
     }
 }
