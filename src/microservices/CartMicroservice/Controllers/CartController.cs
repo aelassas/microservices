@@ -1,4 +1,5 @@
 ﻿using CartMicroservice.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 
@@ -17,6 +18,7 @@ public class CartController : ControllerBase
 
     // GET: api/<CartController>
     [HttpGet]
+    [Authorize]
     public IActionResult Get([FromQuery(Name = "u")] string userId)
     {
         var cartItems = _cartRepository.GetCartItems(userId);
@@ -25,6 +27,7 @@ public class CartController : ControllerBase
 
     // POST api/<CartController>
     [HttpPost]
+    [Authorize]
     public IActionResult Post([FromQuery(Name = "u")] string userId, [FromBody] CartItem cartItem)
     {
         _cartRepository.InsertCartItem(userId, cartItem);
@@ -33,6 +36,7 @@ public class CartController : ControllerBase
 
     // PUT api/<CartController>
     [HttpPut]
+    [Authorize]
     public IActionResult Put([FromQuery(Name = "u")] string userId, [FromBody] CartItem cartItem)
     {
         _cartRepository.UpdateCartItem(userId, cartItem);
@@ -41,6 +45,7 @@ public class CartController : ControllerBase
 
     // DELETE api/<CartController>
     [HttpDelete]
+    [Authorize]
     public IActionResult Delete([FromQuery(Name = "u")] string userId, [FromQuery(Name = "ci")] string cartItemId)
     {
         _cartRepository.DeleteCartItem(userId, cartItemId);

@@ -1,4 +1,5 @@
 ﻿using CatalogMicroservice.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 
@@ -17,6 +18,7 @@ public class CatalogController : ControllerBase
 
     // GET: api/<CatalogController>
     [HttpGet]
+    [Authorize]
     public IActionResult Get()
     {
         var catalogItems = _catalogRepository.GetCatalogItems();
@@ -25,6 +27,7 @@ public class CatalogController : ControllerBase
 
     // GET api/<CatalogController>/653e4410614d711b7fc953a7
     [HttpGet("{id}")]
+    [Authorize]
     public IActionResult Get(string id)
     {
         var catalogItem = _catalogRepository.GetCatalogItem(id);
@@ -33,6 +36,7 @@ public class CatalogController : ControllerBase
 
     // POST api/<CatalogController>
     [HttpPost]
+    [Authorize]
     public IActionResult Post([FromBody] CatalogItem catalogItem)
     {
         _catalogRepository.InsertCatalogItem(catalogItem);
@@ -41,6 +45,7 @@ public class CatalogController : ControllerBase
 
     // PUT api/<CatalogController>
     [HttpPut]
+    [Authorize]
     public IActionResult Put([FromBody] CatalogItem? catalogItem)
     {
         if (catalogItem != null)
@@ -53,6 +58,7 @@ public class CatalogController : ControllerBase
 
     // DELETE api/<CatalogController>/653e4410614d711b7fc953a7
     [HttpDelete("{id}")]
+    [Authorize]
     public IActionResult Delete(string id)
     {
         _catalogRepository.DeleteCatalogItem(id);

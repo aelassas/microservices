@@ -28,14 +28,42 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+
+        services.AddJwtAuthentication(Configuration); // JWT Configuration
+
         services.AddMongoDb(Configuration);
+
         services.AddSingleton<ICatalogRepository>(sp =>
           new CatalogRepository(sp.GetService<IMongoDatabase>() ?? throw new Exception("IMongoDatabase not found"))
         );
+
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog", Version = "v1" });
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please insert JWT token with the prefix Bearer into field",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
         });
+
         services.AddHealthChecks()
             .AddMongoDb(
                 mongodbConnectionString: (
@@ -45,6 +73,7 @@ public class Startup
                 name: "mongo",
                 failureStatus: HealthStatus.Unhealthy
             );
+
         services.AddHealthChecksUI().AddInMemoryStorage();
     }
 
@@ -78,6 +107,10 @@ public class Startup
         app.UseHttpsRedirection();
 
         app.UseRouting();
+
+        app.UseMiddleware<JwtMiddleware>(); // JWT Middleware
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 
