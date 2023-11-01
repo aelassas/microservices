@@ -15,28 +15,37 @@ public class CartRepository : ICartRepository
     }
 
     public IList<CartItem> GetCartItems(string userId) =>
-        _col.Find(c => c.UserId == userId).FirstOrDefault()?.CartItems ?? new List<CartItem>();
+        _col
+        .Find(c => c.UserId == userId)
+        .FirstOrDefault()?.CartItems ?? new List<CartItem>();
 
     public void InsertCartItem(string userId, CartItem cartItem)
     {
         var cart = _col.Find(c => c.UserId == userId).FirstOrDefault();
         if (cart == null)
         {
-            cart = new Cart { UserId = userId, CartItems = new List<CartItem> { cartItem } };
+            cart = new Cart
+            {
+                UserId = userId,
+                CartItems = new List<CartItem> { cartItem }
+            };
             _col.InsertOne(cart);
         }
         else
         {
-            var cartItemFromDb = cart.CartItems.FirstOrDefault(ci => ci.CatalogItem!.Id == cartItem.CatalogItem?.Id);
+            var ci = cart
+                .CartItems
+                .FirstOrDefault(ci => ci.CatalogItem!.Id == cartItem.CatalogItem?.Id);
 
-            if (cartItemFromDb == null)
+            if (ci == null)
             {
                 cart.CartItems.Add(cartItem);
             }
             else
             {
-                cartItemFromDb.Quantity++;
+                ci.Quantity++;
             }
+
             var update = Builders<Cart>.Update
                 .Set(c => c.CartItems, cart.CartItems);
             _col.UpdateOne(c => c.UserId == userId, update);
