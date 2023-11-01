@@ -36,11 +36,6 @@ public class JwtMiddleware : IMiddleware
                 context.Response.StatusCode = 401;
             }
         }
-        else
-        {
-            // If token is invalid, send 401 Unauthorized status
-            context.Response.StatusCode = 401;
-        }
 
         // Continue processing the request
         await next(context);
