@@ -20,7 +20,7 @@ public class JwtMiddleware : IMiddleware
         var bearer = context.Request.Headers["Authorization"].ToString();
         var token = bearer.Replace("Bearer ", "");
 
-        if (!token.IsNullOrEmpty())
+        if (!string.IsNullOrEmpty(token))
         {
             // Verify the token using the IJwtBuilder
             var userId = _jwtBuilder.ValidateToken(token);
