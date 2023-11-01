@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using System.Threading.Tasks;
 
@@ -18,7 +17,7 @@ public class JwtMiddleware : IMiddleware
     {
         // Get the token from the Authorization header
         var bearer = context.Request.Headers["Authorization"].ToString();
-        var token = bearer.Replace("Bearer ", "");
+        var token = bearer.Replace("Bearer ", string.Empty);
 
         if (!string.IsNullOrEmpty(token))
         {
