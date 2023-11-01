@@ -56,6 +56,7 @@ The backend allows admin users to see the available catalog items, allows to add
 - **CartMicroservice** project contains the source code of the microservice managing the cart.
 - **IdentityMicroservice** project contains the source code of the microservice managing users.
 - **Middleware** project contains the source code of common functionalities used by microservices.
+- **Model** project contains MongoDB models used by microservices.
 - **FrontendGateway** project contains the source code of the frontend API gateway.
 - **BackendGateway** project contains the source code of the backend API gateway.
 - **Frontend** project contains the source code of the frontend client app.
