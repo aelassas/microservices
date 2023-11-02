@@ -79,12 +79,34 @@ public class CartRepository : ICartRepository
 
     public void DeleteCatalogItem(string catalogItemId)
     {
-        // Delete catalog item references from carts
-        var carts = _col.Find(c => c.CartItems.Any(i => i.CatalogItemId == catalogItemId)).ToList();
+        // Delete catalog item from carts
+        var carts = GetCarts(catalogItemId);
         foreach (var cart in carts)
         {
             cart.CartItems.RemoveAll(i => i.CatalogItemId == catalogItemId);
-            _col.UpdateOne(c => c.Id == cart.Id, Builders<Cart>.Update.Set(c => c.CartItems, cart.CartItems));
+            var update = Builders<Cart>.Update
+                .Set(c => c.CartItems, cart.CartItems);
+            _col.UpdateOne(c => c.Id == cart.Id, update);
         }
     }
+
+    public void UpdateCatalogItem(string catalogItemId, string name, decimal price)
+    {
+        // Update catalog item in carts
+        var carts = GetCarts(catalogItemId);
+        foreach (var cart in carts)
+        {
+            var cartItem = cart.CartItems.First(i => i.CatalogItemId == catalogItemId);
+            cartItem.Name = name;
+            cartItem.Price = price;
+            var update = Builders<Cart>.Update
+                .Set(c => c.CartItems, cart.CartItems);
+            _col.UpdateOne(c => c.Id == cart.Id, update);
+        }
+    }
+
+    private IList<Cart> GetCarts(string catalogItemId) =>
+        _col
+            .Find(c => c.CartItems.Any(i => i.CatalogItemId == catalogItemId))
+            .ToList();
 }

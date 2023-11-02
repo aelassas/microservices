@@ -81,6 +81,22 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/cart/update-catalog-item",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44388
+        }
+      ],
+      "UpstreamPathTemplate": "/cart/update-catalog-item",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/cart/delete-catalog-item",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

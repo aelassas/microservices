@@ -100,8 +100,14 @@ window.onload = () => {
                                         };
 
                                         common.put(settings.uri + "catalog", () => {
-                                            modal.destroy();
-                                            loadCatalog();
+
+                                            common.put(settings.uri + `cart/update-catalog-item?ci=${id}&n=${encodeURIComponent(name)}&p=${encodeURIComponent(price)}`, () => {
+                                                modal.destroy();
+                                                loadCatalog();
+                                            }, () => {
+                                                alert("Error while updating catalog item.");
+                                            }, catalogItem, auth.token);
+
                                         }, () => {
                                             alert("Error while updating catalog item.");
                                         }, catalogItem, auth.token);
