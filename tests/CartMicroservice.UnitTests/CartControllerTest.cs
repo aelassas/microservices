@@ -74,7 +74,6 @@ public class CartControllerTest
                 .Values
                 .Where(items => items.Any(i => i.CatalogItemId == catalogItemId))
                 .SelectMany(items => items)
-                .Distinct()
                 .ToList();
 
                 foreach (var cartItem in cartItems)
