@@ -1,7 +1,7 @@
-﻿using CatalogMicroservice.Repository;
+﻿using CatalogMicroservice.Model;
+using CatalogMicroservice.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Model;
 
 namespace CatalogMicroservice.Controllers;
 

@@ -51,7 +51,14 @@ window.onload = () => {
                         const catalogItemId = row.querySelector(".id").innerHTML;
 
                         common.delete(settings.uri + "catalog/" + encodeURIComponent(catalogItemId), () => {
-                            row.remove();
+
+                            // Remove catalog item references from carts
+                            common.delete(settings.uri + "cart/delete-catalog-item?ci=" + encodeURIComponent(catalogItemId), () => {
+                                row.remove();
+                            }, () => {
+                                alert("Error while removing item.");
+                            }, auth.token);
+
                         }, () => {
                             alert("Error while removing item.");
                         }, auth.token);

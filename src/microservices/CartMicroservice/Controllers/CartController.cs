@@ -1,7 +1,7 @@
-﻿using CartMicroservice.Repository;
+﻿using CartMicroservice.Model;
+using CartMicroservice.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Model;
 
 namespace CartMicroservice.Controllers;
 
@@ -49,6 +49,15 @@ public class CartController : ControllerBase
     public IActionResult Delete([FromQuery(Name = "u")] string userId, [FromQuery(Name = "ci")] string cartItemId)
     {
         _cartRepository.DeleteCartItem(userId, cartItemId);
+        return Ok();
+    }
+
+    // DELETE api/<CartController>/delete-catalog-item
+    [HttpDelete("delete-catalog-item")]
+    [Authorize]
+    public IActionResult Delete([FromQuery(Name = "ci")] string catalogItemId)
+    {
+        _cartRepository.DeleteCatalogItem(catalogItemId);
         return Ok();
     }
 }

@@ -1,7 +1,7 @@
 using CatalogMicroservice.Controllers;
+using CatalogMicroservice.Model;
 using CatalogMicroservice.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Model;
 using Moq;
 
 namespace CatalogMicroservice.UnitTests;

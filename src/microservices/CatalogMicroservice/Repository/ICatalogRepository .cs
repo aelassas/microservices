@@ -1,4 +1,4 @@
-﻿using Model;
+﻿using CatalogMicroservice.Model;
 using System.Collections.Generic;
 
 namespace CatalogMicroservice.Repository;

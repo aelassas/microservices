@@ -1,4 +1,4 @@
-﻿using Model;
+﻿using IdentityMicroservice.Model;
 using MongoDB.Driver;
 
 namespace IdentityMicroservice.Repository;

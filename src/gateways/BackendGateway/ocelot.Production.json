@@ -64,7 +64,6 @@
         "AllowedScopes": []
       }
     },
-
     {
       "DownstreamPathTemplate": "/api/catalog/{id}",
       "DownstreamScheme": "http",
@@ -75,6 +74,22 @@
         }
       ],
       "UpstreamPathTemplate": "/catalog/{id}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/cart/delete-catalog-item",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44388
+        }
+      ],
+      "UpstreamPathTemplate": "/cart/delete-catalog-item",
       "UpstreamHttpMethod": [ "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",

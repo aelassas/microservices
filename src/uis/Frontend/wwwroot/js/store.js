@@ -49,12 +49,9 @@ window.onload = () => {
                     const quantity = 1;
 
                     const cartItem = {
-                        "catalogItem": {
-                            "id": catalogItemId,
-                            "name": catalogItemName,
-                            "Description": catalogItemDesc,
-                            "price": catalogItemPrice
-                        },
+                        "catalogItemId": catalogItemId,
+                        "name": catalogItemName,
+                        "price": catalogItemPrice,
                         "quantity": quantity
                     };
 

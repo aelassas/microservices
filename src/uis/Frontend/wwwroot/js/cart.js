@@ -17,9 +17,9 @@ window.onload = () => {
             let items = [];
             for (const cartItem of cartItems) {
                 items.push("<tr>"
-                    + "<td class='id'>" + cartItem.catalogItem.id + "</td>"
-                    + "<td class='name'>" + cartItem.catalogItem.name + "</td>"
-                    + "<td class='price'>" + `$ ${cartItem.catalogItem.price}` + "</td>"
+                    + "<td class='id'>" + cartItem.catalogItemId + "</td>"
+                    + "<td class='name'>" + cartItem.name + "</td>"
+                    + "<td class='price'>" + `$ ${cartItem.price}` + "</td>"
                     + "<td>" + cartItem.quantity + "</td>"
                     + "<td><input type='button' value='Remove' class='remove btn btn-danger' /></td>"
                     + "</tr>");

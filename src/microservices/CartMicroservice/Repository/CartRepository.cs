@@ -1,4 +1,4 @@
-﻿using Model;
+﻿using CartMicroservice.Model;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +35,7 @@ public class CartRepository : ICartRepository
         {
             var ci = cart
                 .CartItems
-                .FirstOrDefault(ci => ci.CatalogItem!.Id == cartItem.CatalogItem?.Id);
+                .FirstOrDefault(ci => ci.CatalogItemId == cartItem.CatalogItemId);
 
             if (ci == null)
             {
@@ -57,7 +57,7 @@ public class CartRepository : ICartRepository
         var cart = _col.Find(c => c.UserId == userId).FirstOrDefault();
         if (cart != null)
         {
-            cart.CartItems.RemoveAll(ci => ci.CatalogItem!.Id == cartItem.CatalogItem?.Id);
+            cart.CartItems.RemoveAll(ci => ci.CatalogItemId == cartItem.CatalogItemId);
             cart.CartItems.Add(cartItem);
             var update = Builders<Cart>.Update
                 .Set(c => c.CartItems, cart.CartItems);
@@ -70,10 +70,21 @@ public class CartRepository : ICartRepository
         var cart = _col.Find(c => c.UserId == userId).FirstOrDefault();
         if (cart != null)
         {
-            cart.CartItems.RemoveAll(ci => ci.CatalogItem!.Id == catalogItemId);
+            cart.CartItems.RemoveAll(ci => ci.CatalogItemId == catalogItemId);
             var update = Builders<Cart>.Update
                 .Set(c => c.CartItems, cart.CartItems);
             _col.UpdateOne(c => c.UserId == userId, update);
+        }
+    }
+
+    public void DeleteCatalogItem(string catalogItemId)
+    {
+        // Delete catalog item references from carts
+        var carts = _col.Find(c => c.CartItems.Any(i => i.CatalogItemId == catalogItemId)).ToList();
+        foreach (var cart in carts)
+        {
+            cart.CartItems.RemoveAll(i => i.CatalogItemId == catalogItemId);
+            _col.UpdateOne(c => c.Id == cart.Id, Builders<Cart>.Update.Set(c => c.CartItems, cart.CartItems));
         }
     }
 }
