@@ -12,7 +12,7 @@ public class CartControllerTest
     private static readonly string UserId = "653e43b8c76b6b56a720803e";
     private static readonly string A54Id = "653e4410614d711b7fc953a7";
     private static readonly string A14Id = "253e4410614d711b7fc953a7";
-    private readonly Dictionary<string, List<CartItem>> _cartItems = new()
+    private readonly Dictionary<string, List<CartItem>> _carts = new()
     {
         {
             UserId,
@@ -40,23 +40,23 @@ public class CartControllerTest
     {
         var mockRepo = new Mock<ICartRepository>();
         mockRepo.Setup(repo => repo.GetCartItems(It.IsAny<string>()))
-            .Returns<string>(id => _cartItems[id]);
+            .Returns<string>(id => _carts[id]);
         mockRepo.Setup(repo => repo.InsertCartItem(It.IsAny<string>(), It.IsAny<CartItem>()))
             .Callback<string, CartItem>((userId, item) =>
             {
-                if (_cartItems.TryGetValue(userId, out var items))
+                if (_carts.TryGetValue(userId, out var items))
                 {
                     items.Add(item);
                 }
                 else
                 {
-                    _cartItems.Add(userId, new List<CartItem> { item });
+                    _carts.Add(userId, new List<CartItem> { item });
                 }
             });
         mockRepo.Setup(repo => repo.UpdateCartItem(It.IsAny<string>(), It.IsAny<CartItem>()))
             .Callback<string, CartItem>((userId, item) =>
             {
-                if (_cartItems.TryGetValue(userId, out var items))
+                if (_carts.TryGetValue(userId, out var items))
                 {
                     var currentItem = items.FirstOrDefault(i => i.CatalogItemId == item.CatalogItemId);
                     if (currentItem != null)
@@ -67,13 +67,38 @@ public class CartControllerTest
                     }
                 }
             });
+        mockRepo.Setup(repo => repo.UpdateCatalogItem(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()))
+            .Callback<string, string, decimal>((catalogItemId, name, price) =>
+            {
+                var cartItems = _carts
+                .Values
+                .Where(items => items.Any(i => i.CatalogItemId == catalogItemId))
+                .SelectMany(items => items)
+                .Distinct()
+                .ToList();
+
+                foreach (var cartItem in cartItems)
+                {
+                    cartItem.Name = name;
+                    cartItem.Price = price;
+                }
+            });
         mockRepo.Setup(repo => repo.DeleteCartItem(It.IsAny<string>(), It.IsAny<string>()))
             .Callback<string, string>((userId, catalogItemId) =>
             {
-                if (_cartItems.TryGetValue(userId, out var items))
+                if (_carts.TryGetValue(userId, out var items))
                 {
                     items.RemoveAll(i => i.CatalogItemId == catalogItemId);
                 }
+            });
+        mockRepo.Setup(repo => repo.DeleteCatalogItem(It.IsAny<string>()))
+            .Callback<string>((catalogItemId) =>
+            {
+                foreach (var cart in _carts)
+                {
+                    cart.Value.RemoveAll(i => i.CatalogItemId == catalogItemId);
+                }
+
             });
         _controller = new CartController(mockRepo.Object);
     }
@@ -101,7 +126,7 @@ public class CartControllerTest
             }
         );
         Assert.IsType<OkResult>(okObjectResult);
-        Assert.NotNull(_cartItems[UserId].FirstOrDefault(i => i.CatalogItemId == A54Id));
+        Assert.NotNull(_carts[UserId].FirstOrDefault(i => i.CatalogItemId == A54Id));
     }
 
     [Fact]
@@ -119,7 +144,7 @@ public class CartControllerTest
             }
         );
         Assert.IsType<OkResult>(okObjectResult);
-        var catalogItem = _cartItems[UserId].FirstOrDefault(i => i.CatalogItemId == catalogItemId);
+        var catalogItem = _carts[UserId].FirstOrDefault(i => i.CatalogItemId == catalogItemId);
         Assert.NotNull(catalogItem);
         Assert.Equal("Samsung Galaxy A54", catalogItem.Name);
         Assert.Equal(550, catalogItem.Price);
@@ -127,13 +152,43 @@ public class CartControllerTest
     }
 
     [Fact]
+    public void UpdateCatalogItemTest()
+    {
+        var catalogItemId = A54Id;
+        var okObjectResult = _controller.Put(
+            A54Id,
+            "Samsung Galaxy A54",
+            550
+        );
+        Assert.IsType<OkResult>(okObjectResult);
+        var catalogItem = _carts[UserId].FirstOrDefault(i => i.CatalogItemId == catalogItemId);
+        Assert.NotNull(catalogItem);
+        Assert.Equal("Samsung Galaxy A54", catalogItem.Name);
+        Assert.Equal(550, catalogItem.Price);
+        Assert.Equal(1, catalogItem.Quantity);
+    }
+
+    [Fact]
     public void DeleteCartItemTest()
     {
         var id = A14Id;
-        var items = _cartItems[UserId];
+        var items = _carts[UserId];
         var item = items.FirstOrDefault(i => i.CatalogItemId == id);
         Assert.NotNull(item);
         var okObjectResult = _controller.Delete(UserId, id);
+        Assert.IsType<OkResult>(okObjectResult);
+        item = items.FirstOrDefault(i => i.CatalogItemId == id);
+        Assert.Null(item);
+    }
+
+    [Fact]
+    public void DeleteCatalogItemTest()
+    {
+        var id = A14Id;
+        var items = _carts[UserId];
+        var item = items.FirstOrDefault(i => i.CatalogItemId == id);
+        Assert.NotNull(item);
+        var okObjectResult = _controller.Delete(id);
         Assert.IsType<OkResult>(okObjectResult);
         item = items.FirstOrDefault(i => i.CatalogItemId == id);
         Assert.Null(item);
