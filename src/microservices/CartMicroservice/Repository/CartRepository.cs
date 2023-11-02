@@ -106,6 +106,5 @@ public class CartRepository : ICartRepository
     }
 
     private IList<Cart> GetCarts(string catalogItemId) =>
-        _col.Find(c => c.CartItems.Any(i => i.CatalogItemId == catalogItemId))
-            .ToList();
+        _col.Find(c => c.CartItems.Any(i => i.CatalogItemId == catalogItemId)).ToList();
 }
