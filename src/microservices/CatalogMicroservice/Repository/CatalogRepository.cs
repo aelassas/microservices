@@ -28,9 +28,6 @@ public class CatalogRepository : ICatalogRepository
             .Set(c => c.Description, catalogItem.Description)
             .Set(c => c.Price, catalogItem.Price));
 
-    public void DeleteCatalogItem(string catalogItemId)
-    {
-        // Delete catalog item
+    public void DeleteCatalogItem(string catalogItemId) =>
         _col.DeleteOne(c => c.Id == catalogItemId);
-    }
 }
