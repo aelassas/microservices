@@ -98,7 +98,6 @@ public class CartControllerTest
                 {
                     cart.Value.RemoveAll(i => i.CatalogItemId == catalogItemId);
                 }
-
             });
         _controller = new CartController(mockRepo.Object);
     }
