@@ -96,12 +96,15 @@ public class CartRepository : ICartRepository
         var carts = GetCarts(catalogItemId);
         foreach (var cart in carts)
         {
-            var cartItem = cart.CartItems.First(i => i.CatalogItemId == catalogItemId);
-            cartItem.Name = name;
-            cartItem.Price = price;
-            var update = Builders<Cart>.Update
-                .Set(c => c.CartItems, cart.CartItems);
-            _col.UpdateOne(c => c.Id == cart.Id, update);
+            var cartItem = cart.CartItems.FirstOrDefault(i => i.CatalogItemId == catalogItemId);
+            if (cartItem != null)
+            {
+                cartItem.Name = name;
+                cartItem.Price = price;
+                var update = Builders<Cart>.Update
+                    .Set(c => c.CartItems, cart.CartItems);
+                _col.UpdateOne(c => c.Id == cart.Id, update);
+            }
         }
     }
 
