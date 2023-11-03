@@ -40,6 +40,8 @@ Below is the backend API gateway:
 - **POST /catalog**: creates a catalog item.
 - **PUT /catalog**: updates a catalog item.
 - **DELETE /catalog**: deletes a catalog item.
+- **PUT /cart/update-catalog-item**: updates a catalog item in carts.
+- **DELETE /cart/delete-catalog-item**: deletes catalog item references from carts.
 - **POST /identity/login**: performs a login.
 - **POST /identity/register**: registers a user.
 - **GET /identity/validate**: validates a JWT token.
