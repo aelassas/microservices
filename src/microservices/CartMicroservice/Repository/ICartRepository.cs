@@ -9,6 +9,6 @@ public interface ICartRepository
     void InsertCartItem(string userId, CartItem cartItem);
     void UpdateCartItem(string userId, CartItem cartItem);
     void DeleteCartItem(string userId, string cartItemId);
-    void DeleteCatalogItem(string catalogItemId);
     void UpdateCatalogItem(string catalogItemId, string name, decimal price);
+    void DeleteCatalogItem(string catalogItemId);
 }

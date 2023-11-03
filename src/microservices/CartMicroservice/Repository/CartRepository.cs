@@ -77,19 +77,6 @@ public class CartRepository : ICartRepository
         }
     }
 
-    public void DeleteCatalogItem(string catalogItemId)
-    {
-        // Delete catalog item from carts
-        var carts = GetCarts(catalogItemId);
-        foreach (var cart in carts)
-        {
-            cart.CartItems.RemoveAll(i => i.CatalogItemId == catalogItemId);
-            var update = Builders<Cart>.Update
-                .Set(c => c.CartItems, cart.CartItems);
-            _col.UpdateOne(c => c.Id == cart.Id, update);
-        }
-    }
-
     public void UpdateCatalogItem(string catalogItemId, string name, decimal price)
     {
         // Update catalog item in carts
@@ -105,6 +92,19 @@ public class CartRepository : ICartRepository
                     .Set(c => c.CartItems, cart.CartItems);
                 _col.UpdateOne(c => c.Id == cart.Id, update);
             }
+        }
+    }
+
+    public void DeleteCatalogItem(string catalogItemId)
+    {
+        // Delete catalog item from carts
+        var carts = GetCarts(catalogItemId);
+        foreach (var cart in carts)
+        {
+            cart.CartItems.RemoveAll(i => i.CatalogItemId == catalogItemId);
+            var update = Builders<Cart>.Update
+                .Set(c => c.CartItems, cart.CartItems);
+            _col.UpdateOne(c => c.Id == cart.Id, update);
         }
     }
 
