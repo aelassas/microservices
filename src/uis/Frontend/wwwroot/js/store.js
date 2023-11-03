@@ -43,16 +43,15 @@ window.onload = () => {
                 const addButton = row.querySelector(".add");
                 addButton.onclick = () => {
                     const catalogItemId = row.querySelector(".id").innerHTML;
-                    const catalogItemName = row.querySelector(".name").innerHTML;
-                    const catalogItemDesc = row.querySelector(".desc").innerHTML;
-                    const catalogItemPrice = Number.parseFloat(row.querySelector(".price").innerHTML.replace("$ ", ""));
+                    const name = row.querySelector(".name").innerHTML;
+                    const price = Number.parseFloat(row.querySelector(".price").innerHTML.replace("$ ", ""));
                     const quantity = 1;
 
                     const cartItem = {
-                        "catalogItemId": catalogItemId,
-                        "name": catalogItemName,
-                        "price": catalogItemPrice,
-                        "quantity": quantity
+                        catalogItemId,
+                        name,
+                        price,
+                        quantity
                     };
 
                     common.post(settings.uri + "cart?u=" + encodeURIComponent(userId), () => {

@@ -88,15 +88,15 @@ window.onload = () => {
                                 submitButton.onclick = () => {
                                     const id = row.querySelector(".id").innerHTML;
                                     const name = jBoxContent.querySelector(".name").value;
-                                    const desc = jBoxContent.querySelector(".desc").value;
+                                    const description = jBoxContent.querySelector(".desc").value;
                                     const price = Number.parseFloat(jBoxContent.querySelector(".price").value);
 
-                                    if (name !== "" && desc !== "") {
+                                    if (name !== "" && description !== "") {
                                         const catalogItem = {
-                                            "id": id,
-                                            "name": name,
-                                            "description": desc,
-                                            "price": price
+                                            id,
+                                            name,
+                                            description,
+                                            price
                                         };
 
                                         common.put(settings.uri + "catalog", () => {
@@ -150,14 +150,14 @@ window.onload = () => {
                     const submitButton = jBoxFooter.querySelector(".submit");
                     submitButton.onclick = () => {
                         const name = jBoxContent.querySelector(".name").value;
-                        const desc = jBoxContent.querySelector(".desc").value;
+                        const description = jBoxContent.querySelector(".desc").value;
                         const price = Number.parseFloat(jBoxContent.querySelector(".price").value);
 
-                        if (name !== "" && desc !== "") {
+                        if (name !== "" && description !== "") {
                             const catalogItem = {
-                                "name": name,
-                                "description": desc,
-                                "price": price
+                                name,
+                                description,
+                                price
                             };
 
                             common.post(settings.uri + "catalog", () => {
