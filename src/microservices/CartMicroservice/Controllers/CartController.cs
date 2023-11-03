@@ -43,21 +43,21 @@ public class CartController : ControllerBase
         return Ok();
     }
 
-    // PUT api/<CartController>/update-catalog-item
-    [HttpPut("update-catalog-item")]
-    [Authorize]
-    public IActionResult Put([FromQuery(Name = "ci")] string catalogItemId, [FromQuery(Name = "n")] string name, [FromQuery(Name = "p")] decimal price)
-    {
-        _cartRepository.UpdateCatalogItem(catalogItemId, name, price);
-        return Ok();
-    }
-
     // DELETE api/<CartController>
     [HttpDelete]
     [Authorize]
     public IActionResult Delete([FromQuery(Name = "u")] string userId, [FromQuery(Name = "ci")] string cartItemId)
     {
         _cartRepository.DeleteCartItem(userId, cartItemId);
+        return Ok();
+    }
+
+    // PUT api/<CartController>/update-catalog-item
+    [HttpPut("update-catalog-item")]
+    [Authorize]
+    public IActionResult Put([FromQuery(Name = "ci")] string catalogItemId, [FromQuery(Name = "n")] string name, [FromQuery(Name = "p")] decimal price)
+    {
+        _cartRepository.UpdateCatalogItem(catalogItemId, name, price);
         return Ok();
     }
 

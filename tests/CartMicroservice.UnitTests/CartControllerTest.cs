@@ -150,6 +150,19 @@ public class CartControllerTest
     }
 
     [Fact]
+    public void DeleteCartItemTest()
+    {
+        var id = A14Id;
+        var items = _carts[UserId];
+        var item = items.FirstOrDefault(i => i.CatalogItemId == id);
+        Assert.NotNull(item);
+        var okObjectResult = _controller.Delete(UserId, id);
+        Assert.IsType<OkResult>(okObjectResult);
+        item = items.FirstOrDefault(i => i.CatalogItemId == id);
+        Assert.Null(item);
+    }
+
+    [Fact]
     public void UpdateCatalogItemTest()
     {
         var catalogItemId = A54Id;
@@ -164,19 +177,6 @@ public class CartControllerTest
         Assert.Equal("Samsung Galaxy A54", catalogItem.Name);
         Assert.Equal(550, catalogItem.Price);
         Assert.Equal(1, catalogItem.Quantity);
-    }
-
-    [Fact]
-    public void DeleteCartItemTest()
-    {
-        var id = A14Id;
-        var items = _carts[UserId];
-        var item = items.FirstOrDefault(i => i.CatalogItemId == id);
-        Assert.NotNull(item);
-        var okObjectResult = _controller.Delete(UserId, id);
-        Assert.IsType<OkResult>(okObjectResult);
-        item = items.FirstOrDefault(i => i.CatalogItemId == id);
-        Assert.Null(item);
     }
 
     [Fact]
