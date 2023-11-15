@@ -1,43 +1,35 @@
+using CatalogMicroservice;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 
-namespace CatalogMicroservice;
-
-public static class Program
-{
-    public static void Main(string[] args)
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((hostingContext, config) =>
     {
-        CreateHostBuilder(args).Build().Run();
-    }
+        config
+            .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+            .AddJsonFile("appsettings.json", true, true)
+            .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
+            .AddEnvironmentVariables();
 
-    private static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((hostingContext, config) =>
-            {
-                config
-                    .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                    .AddJsonFile("appsettings.json", true, true)
-                    .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                    .AddEnvironmentVariables();
+        if (hostingContext.HostingEnvironment.EnvironmentName == "Development")
+        {
+            config.AddJsonFile("appsettings.Local.json", true, true);
+        }
+    })
+    .UseSerilog((_, config) =>
+    {
+        config
+            .MinimumLevel.Information()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            .WriteTo.Console();
+    })
+    .ConfigureWebHostDefaults(webBuilder =>
+    {
+        webBuilder.UseStartup<Startup>();
+    });
 
-                if (hostingContext.HostingEnvironment.EnvironmentName == "Development")
-                {
-                    config.AddJsonFile("appsettings.Local.json", true, true);
-                }
-            })
-            .UseSerilog((_, config) =>
-            {
-                config
-                    .MinimumLevel.Information()
-                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                    .Enrich.FromLogContext()
-                    .WriteTo.Console();
-            })
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
-}
+builder.Build().Run();

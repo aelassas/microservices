@@ -85,8 +85,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 44388
+          "Host": "cart",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/cart/update-catalog-item",
@@ -101,8 +101,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 44388
+          "Host": "cart",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/cart/delete-catalog-item",

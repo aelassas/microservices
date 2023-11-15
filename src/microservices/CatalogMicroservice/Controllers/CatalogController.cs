@@ -7,21 +7,14 @@ namespace CatalogMicroservice.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CatalogController : ControllerBase
+public class CatalogController(ICatalogRepository catalogRepository) : ControllerBase
 {
-    private readonly ICatalogRepository _catalogRepository;
-
-    public CatalogController(ICatalogRepository catalogRepository)
-    {
-        _catalogRepository = catalogRepository;
-    }
-
     // GET: api/<CatalogController>
     [HttpGet]
     [Authorize]
     public IActionResult Get()
     {
-        var catalogItems = _catalogRepository.GetCatalogItems();
+        var catalogItems = catalogRepository.GetCatalogItems();
         return Ok(catalogItems);
     }
 
@@ -30,7 +23,7 @@ public class CatalogController : ControllerBase
     [Authorize]
     public IActionResult Get(string id)
     {
-        var catalogItem = _catalogRepository.GetCatalogItem(id);
+        var catalogItem = catalogRepository.GetCatalogItem(id);
         return Ok(catalogItem);
     }
 
@@ -39,7 +32,7 @@ public class CatalogController : ControllerBase
     [Authorize]
     public IActionResult Post([FromBody] CatalogItem catalogItem)
     {
-        _catalogRepository.InsertCatalogItem(catalogItem);
+        catalogRepository.InsertCatalogItem(catalogItem);
         return CreatedAtAction(nameof(Get), new { id = catalogItem.Id }, catalogItem);
     }
 
@@ -50,7 +43,7 @@ public class CatalogController : ControllerBase
     {
         if (catalogItem != null)
         {
-            _catalogRepository.UpdateCatalogItem(catalogItem);
+            catalogRepository.UpdateCatalogItem(catalogItem);
             return Ok();
         }
         return new NoContentResult();
@@ -61,7 +54,7 @@ public class CatalogController : ControllerBase
     [Authorize]
     public IActionResult Delete(string id)
     {
-        _catalogRepository.DeleteCatalogItem(id);
+        catalogRepository.DeleteCatalogItem(id);
         return Ok();
     }
 }

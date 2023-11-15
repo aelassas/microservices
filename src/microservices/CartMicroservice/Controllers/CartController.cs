@@ -7,21 +7,14 @@ namespace CartMicroservice.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CartController : ControllerBase
+public class CartController(ICartRepository cartRepository) : ControllerBase
 {
-    private readonly ICartRepository _cartRepository;
-
-    public CartController(ICartRepository cartRepository)
-    {
-        _cartRepository = cartRepository;
-    }
-
     // GET: api/<CartController>
     [HttpGet]
     [Authorize]
     public IActionResult Get([FromQuery(Name = "u")] string userId)
     {
-        var cartItems = _cartRepository.GetCartItems(userId);
+        var cartItems = cartRepository.GetCartItems(userId);
         return Ok(cartItems);
     }
 
@@ -30,7 +23,7 @@ public class CartController : ControllerBase
     [Authorize]
     public IActionResult Post([FromQuery(Name = "u")] string userId, [FromBody] CartItem cartItem)
     {
-        _cartRepository.InsertCartItem(userId, cartItem);
+        cartRepository.InsertCartItem(userId, cartItem);
         return Ok();
     }
 
@@ -39,7 +32,7 @@ public class CartController : ControllerBase
     [Authorize]
     public IActionResult Put([FromQuery(Name = "u")] string userId, [FromBody] CartItem cartItem)
     {
-        _cartRepository.UpdateCartItem(userId, cartItem);
+        cartRepository.UpdateCartItem(userId, cartItem);
         return Ok();
     }
 
@@ -48,7 +41,7 @@ public class CartController : ControllerBase
     [Authorize]
     public IActionResult Delete([FromQuery(Name = "u")] string userId, [FromQuery(Name = "ci")] string cartItemId)
     {
-        _cartRepository.DeleteCartItem(userId, cartItemId);
+        cartRepository.DeleteCartItem(userId, cartItemId);
         return Ok();
     }
 
@@ -57,7 +50,7 @@ public class CartController : ControllerBase
     [Authorize]
     public IActionResult Put([FromQuery(Name = "ci")] string catalogItemId, [FromQuery(Name = "n")] string name, [FromQuery(Name = "p")] decimal price)
     {
-        _cartRepository.UpdateCatalogItem(catalogItemId, name, price);
+        cartRepository.UpdateCatalogItem(catalogItemId, name, price);
         return Ok();
     }
 
@@ -66,7 +59,7 @@ public class CartController : ControllerBase
     [Authorize]
     public IActionResult Delete([FromQuery(Name = "ci")] string catalogItemId)
     {
-        _cartRepository.DeleteCatalogItem(catalogItemId);
+        cartRepository.DeleteCatalogItem(catalogItemId);
         return Ok();
     }
 }

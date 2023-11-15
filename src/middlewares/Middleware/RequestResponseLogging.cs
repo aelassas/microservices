@@ -6,17 +6,8 @@ using System.Threading.Tasks;
 
 namespace Middleware;
 
-public class RequestResponseLogging
+public class RequestResponseLogging(RequestDelegate next, ILogger<RequestResponseLogging> logger)
 {
-    private readonly ILogger<RequestResponseLogging> _logger;
-    private readonly RequestDelegate _next;
-
-    public RequestResponseLogging(RequestDelegate next, ILogger<RequestResponseLogging> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
-
     public async Task InvokeAsync(HttpContext context)
     {
         context.Request.EnableBuffering();
@@ -33,7 +24,7 @@ public class RequestResponseLogging
         var originalBodyStream = context.Response.Body;
         using var responseBody = new MemoryStream();
         context.Response.Body = responseBody;
-        await _next(context);
+        await next(context);
 
         var response = await FormatResponse(context.Response);
         builder.Append("Response: ").AppendLine(response);
@@ -44,7 +35,7 @@ public class RequestResponseLogging
             builder.Append(header.Key).Append(": ").AppendLine(header.Value);
         }
 
-        _logger.LogInformation(builder.ToString());
+        logger.LogInformation(builder.ToString());
 
         await responseBody.CopyToAsync(originalBodyStream);
     }

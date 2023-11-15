@@ -1,11 +1,9 @@
 # syntax=docker/dockerfile:1
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["src/microservices/IdentityMicroservice/IdentityMicroservice.csproj", "microservices/IdentityMicroservice/"]
 COPY src/middlewares middlewares/
@@ -20,5 +18,8 @@ RUN dotnet publish "IdentityMicroservice.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
+ENV ASPNETCORE_URLS=http://+:80
+EXPOSE 80
+EXPOSE 443
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "IdentityMicroservice.dll"]

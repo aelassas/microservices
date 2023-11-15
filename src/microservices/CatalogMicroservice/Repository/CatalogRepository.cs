@@ -4,14 +4,9 @@ using System.Collections.Generic;
 
 namespace CatalogMicroservice.Repository;
 
-public class CatalogRepository : ICatalogRepository
+public class CatalogRepository(IMongoDatabase db) : ICatalogRepository
 {
-    private readonly IMongoCollection<CatalogItem> _col;
-
-    public CatalogRepository(IMongoDatabase db)
-    {
-        _col = db.GetCollection<CatalogItem>(CatalogItem.DocumentName);
-    }
+    private readonly IMongoCollection<CatalogItem> _col = db.GetCollection<CatalogItem>(CatalogItem.DocumentName);
 
     public IList<CatalogItem> GetCatalogItems() =>
         _col.Find(FilterDefinition<CatalogItem>.Empty).ToList();

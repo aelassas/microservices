@@ -5,31 +5,31 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 
-CreateHostBuilder(args).Build().Run();
-static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((hostingContext, config) =>
-            {
-                config
-                    .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                    .AddJsonFile("appsettings.json", true, true)
-                    .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                    .AddEnvironmentVariables();
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((hostingContext, config) =>
+    {
+        config
+            .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+            .AddJsonFile("appsettings.json", true, true)
+            .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
+            .AddEnvironmentVariables();
 
-                if (hostingContext.HostingEnvironment.EnvironmentName == "Development")
-                {
-                    config.AddJsonFile("appsettings.Local.json", true, true);
-                }
-            })
-            .UseSerilog((_, config) =>
-            {
-                config
-                    .MinimumLevel.Information()
-                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                    .Enrich.FromLogContext()
-                    .WriteTo.Console();
-            })
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
+        if (hostingContext.HostingEnvironment.EnvironmentName == "Development")
+        {
+            config.AddJsonFile("appsettings.Local.json", true, true);
+        }
+    })
+    .UseSerilog((_, config) =>
+    {
+        config
+            .MinimumLevel.Information()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            .WriteTo.Console();
+    })
+    .ConfigureWebHostDefaults(webBuilder =>
+    {
+        webBuilder.UseStartup<Startup>();
+    });
+
+builder.Build().Run();

@@ -4,15 +4,8 @@ using System.Threading.Tasks;
 
 namespace Middleware;
 
-public class JwtMiddleware : IMiddleware
+public class JwtMiddleware(IJwtBuilder jwtBuilder) : IMiddleware
 {
-    private readonly IJwtBuilder _jwtBuilder;
-
-    public JwtMiddleware(IJwtBuilder jwtBuilder)
-    {
-        _jwtBuilder = jwtBuilder;
-    }
-
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         // Get the token from the Authorization header
@@ -22,7 +15,7 @@ public class JwtMiddleware : IMiddleware
         if (!string.IsNullOrEmpty(token))
         {
             // Verify the token using the IJwtBuilder
-            var userId = _jwtBuilder.ValidateToken(token);
+            var userId = jwtBuilder.ValidateToken(token);
 
             if (ObjectId.TryParse(userId, out _))
             {

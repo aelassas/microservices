@@ -3,14 +3,9 @@ using MongoDB.Driver;
 
 namespace IdentityMicroservice.Repository;
 
-public class UserRepository : IUserRepository
+public class UserRepository(IMongoDatabase db) : IUserRepository
 {
-    private readonly IMongoCollection<User> _col;
-
-    public UserRepository(IMongoDatabase db)
-    {
-        _col = db.GetCollection<User>(User.DocumentName);
-    }
+    private readonly IMongoCollection<User> _col = db.GetCollection<User>(User.DocumentName);
 
     public User? GetUser(string email) =>
         _col.Find(u => u.Email == email).FirstOrDefault();

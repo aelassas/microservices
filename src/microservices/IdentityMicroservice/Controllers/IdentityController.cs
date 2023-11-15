@@ -7,23 +7,13 @@ namespace IdentityMicroservice.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class IdentityController : ControllerBase
+public class IdentityController(IUserRepository userRepository, IJwtBuilder jwtBuilder, IEncryptor encryptor)
+    : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IJwtBuilder _jwtBuilder;
-    private readonly IEncryptor _encryptor;
-
-    public IdentityController(IUserRepository userRepository, IJwtBuilder jwtBuilder, IEncryptor encryptor)
-    {
-        _userRepository = userRepository;
-        _jwtBuilder = jwtBuilder;
-        _encryptor = encryptor;
-    }
-
     [HttpPost("login")]
     public IActionResult Login([FromBody] User user, [FromQuery(Name = "d")] string destination = "frontend")
     {
-        var u = _userRepository.GetUser(user.Email);
+        var u = userRepository.GetUser(user.Email);
 
         if (u == null)
         {
@@ -35,14 +25,14 @@ public class IdentityController : ControllerBase
             return BadRequest("Could not authenticate user.");
         }
 
-        var isValid = u.ValidatePassword(user.Password, _encryptor);
+        var isValid = u.ValidatePassword(user.Password, encryptor);
 
         if (!isValid)
         {
             return BadRequest("Could not authenticate user.");
         }
 
-        var token = _jwtBuilder.GetToken(u.Id);
+        var token = jwtBuilder.GetToken(u.Id);
 
         return Ok(token);
     }
@@ -50,15 +40,15 @@ public class IdentityController : ControllerBase
     [HttpPost("register")]
     public IActionResult Register([FromBody] User user)
     {
-        var u = _userRepository.GetUser(user.Email);
+        var u = userRepository.GetUser(user.Email);
 
         if (u != null)
         {
             return BadRequest("User already exists.");
         }
 
-        user.SetPassword(user.Password, _encryptor);
-        _userRepository.InsertUser(user);
+        user.SetPassword(user.Password, encryptor);
+        userRepository.InsertUser(user);
 
         return Ok();
     }
@@ -66,14 +56,14 @@ public class IdentityController : ControllerBase
     [HttpGet("validate")]
     public IActionResult Validate([FromQuery(Name = "email")] string email, [FromQuery(Name = "token")] string token)
     {
-        var u = _userRepository.GetUser(email);
+        var u = userRepository.GetUser(email);
 
         if (u == null)
         {
             return NotFound("User not found.");
         }
 
-        var userId = _jwtBuilder.ValidateToken(token);
+        var userId = jwtBuilder.ValidateToken(token);
 
         if (userId != u.Id)
         {

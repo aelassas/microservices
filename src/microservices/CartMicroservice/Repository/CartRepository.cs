@@ -5,14 +5,9 @@ using System.Linq;
 
 namespace CartMicroservice.Repository;
 
-public class CartRepository : ICartRepository
+public class CartRepository(IMongoDatabase db) : ICartRepository
 {
-    private readonly IMongoCollection<Cart> _col;
-
-    public CartRepository(IMongoDatabase db)
-    {
-        _col = db.GetCollection<Cart>(Cart.DocumentName);
-    }
+    private readonly IMongoCollection<Cart> _col = db.GetCollection<Cart>(Cart.DocumentName);
 
     public IList<CartItem> GetCartItems(string userId) =>
         _col
