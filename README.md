@@ -5,7 +5,7 @@ Microservices sample architecture using ASP.NET Core, Ocelot, MongoDB and JWT.
 # Development Environment
 
 - Visual Studio 2022
-- .NET 7.0
+- .NET 8.0
 - MongoDB
 - Postman
 
