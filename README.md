@@ -1,4 +1,4 @@
-[![Build](https://github.com/aelassas/microservices/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/microservices/actions/workflows/build.yml) [![Test](https://github.com/aelassas/microservices/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/microservices/actions/workflows/test.yml) [![CodeFactor](https://www.codefactor.io/repository/github/aelassas/microservices/badge)](https://www.codefactor.io/repository/github/aelassas/microservices)
+[![Build](https://github.com/aelassas/microservices/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/microservices/actions/workflows/build.yml) [![Test](https://github.com/aelassas/microservices/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/microservices/actions/workflows/test.yml)
 
 Microservices sample architecture using ASP.NET Core, Ocelot, MongoDB and JWT.
 
