@@ -1,5 +1,7 @@
 [![Build](https://github.com/aelassas/microservices/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/microservices/actions/workflows/build.yml) [![Test](https://github.com/aelassas/microservices/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/microservices/actions/workflows/test.yml)
 
+This project was originally posted on [CodeProject](https://www.codeproject.com/Articles/5370795/Microservices-using-ASP-NET-Core-8-Ocelot-MongoDB).
+
 Microservices sample architecture using ASP.NET Core, Ocelot, MongoDB and JWT.
 
 # Development Environment
