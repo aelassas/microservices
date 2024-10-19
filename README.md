@@ -170,7 +170,9 @@ Let's start with the simplest microservice, `CatalogMicroservice`.
 
 Below is the model used by `CatalogMicroservice`:
 
-<pre lang="cs">public class CatalogItem
+```csharp
+
+public class CatalogItem
 {
     public static readonly string DocumentName = nameof(CatalogItem);
 
@@ -180,22 +182,30 @@ Below is the model used by `CatalogMicroservice`:
     public required string Name { get; set; }
     public string? Description { get; set; }
     public decimal Price { get; set; }
-}</pre>
+}
+
+```
 
 Below is the repository interface:
 
-<pre lang="cs">public interface ICatalogRepository
+```csharp
+
+public interface ICatalogRepository
 {
     IList<CatalogItem> GetCatalogItems();
     CatalogItem? GetCatalogItem(string catalogItemId);
     void InsertCatalogItem(CatalogItem catalogItem);
     void UpdateCatalogItem(CatalogItem catalogItem);
     void DeleteCatalogItem(string catagItemId);
-}</pre>
+}
+
+```
 
 Below is the repository:
 
-<pre lang="cs">public class CatalogRepository(IMongoDatabase db) : ICatalogRepository
+```csharp
+
+public class CatalogRepository(IMongoDatabase db) : ICatalogRepository
 {
     private readonly IMongoCollection<CatalogItem> _col = 
                      db.GetCollection<CatalogItem>(CatalogItem.DocumentName);
@@ -217,11 +227,15 @@ Below is the repository:
 
     public void DeleteCatalogItem(string catalogItemId) =>
         _col.DeleteOne(c => c.Id == catalogItemId);
-}</pre>
+}
+
+```
 
 Below is the controller:
 
-<pre lang="cs">[Route("api/[controller]")]
+```csharp
+
+[Route("api/[controller]")]
 [ApiController]
 public class CatalogController(ICatalogRepository catalogRepository) : ControllerBase
 {
@@ -268,11 +282,15 @@ public class CatalogController(ICatalogRepository catalogRepository) : Controlle
         catalogRepository.DeleteCatalogItem(id);
         return Ok();
     }
-}</pre>
+}
+
+```
 
 `ICatalogRepository` is added using dependency injection in _Startup.cs_ in order to make the microservice testable:
 
-<pre lang="cs">// This method gets called by the runtime. 
+```csharp
+
+// This method gets called by the runtime. 
 // Use this method to add services to the container.
 public void ConfigureServices(IServiceCollection services)
 {
@@ -288,11 +306,15 @@ public void ConfigureServices(IServiceCollection services)
     });
 
     // ...
-}</pre>
+}
+
+```
 
 Below is `AddMongoDB` extension method:
 
-<pre lang="cs">public static void AddMongoDb
+```csharp
+
+public static void AddMongoDb
   (this IServiceCollection services, IConfiguration configuration)
 {
     services.Configure<MongoOptions>(configuration.GetSection("mongo"));
@@ -309,11 +331,14 @@ Below is `AddMongoDB` extension method:
 
         return client.GetDatabase(options.Value.Database);
     });
-}</pre>
+}
+
+```
 
 Below is `Configure` method in _Startup.cs_:
 
-<pre lang="cs">// This method gets called by the runtime. 
+```csharp
+// This method gets called by the runtime. 
 // Use this method to configure the HTTP request pipeline.
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
@@ -345,11 +370,13 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         endpoints.MapControllers();
     });
-}</pre>
+}
+```
 
 Below is _appsettings.json_:
 
-<pre lang="json">{
+```js
+{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -363,7 +390,8 @@ Below is _appsettings.json_:
     "database": "store-catalog"
   }
 }
-</pre>
+
+```
 
 API documentation is generated using Swashbuckle. Swagger middleware is configured in _Startup.cs_, in `ConfigureServices` and `Configure` methods in _Startup.cs._
 
@@ -379,7 +407,8 @@ Now, let's move on to `IdentityMicroservice`.
 
 Below is the model used by `IdentityMicroservice`:
 
-<pre lang="cs">public class User
+```csharp
+public class User
 {
     public static readonly string DocumentName = nameof(User);
 
@@ -399,21 +428,25 @@ Below is the model used by `IdentityMicroservice`:
 
     public bool ValidatePassword(string password, IEncryptor encryptor) =>
         Password == encryptor.GetHash(password, Salt);
-}</pre>
+}
+```
 
 `IEncryptor` middleware is used for encrypting passwords.
 
 Below is the repository interface:
 
-<pre lang="cs">public interface IUserRepository
+```csharp
+public interface IUserRepository
 {
     User? GetUser(string email);
     void InsertUser(User user);
-}</pre>
+}
+```
 
 Below is the repository implementation:
 
-<pre lang="cs">public class UserRepository(IMongoDatabase db) : IUserRepository
+```csharp
+public class UserRepository(IMongoDatabase db) : IUserRepository
 {
     private readonly IMongoCollection<User> _col = 
                      db.GetCollection<User>(User.DocumentName);
@@ -423,11 +456,13 @@ Below is the repository implementation:
 
     public void InsertUser(User user) =>
         _col.InsertOne(user);
-}</pre>
+}
+```
 
 Below is the controller:
 
-<pre lang="cs">[Route("api/[controller]")]
+```csharp
+[Route("api/[controller]")]
 [ApiController]
 public class IdentityController
   (IUserRepository userRepository, IJwtBuilder jwtBuilder, IEncryptor encryptor)
@@ -497,11 +532,13 @@ public class IdentityController
 
         return Ok(userId);
     }
-}</pre>
+}
+```
 
 `IUserRepository`, `IJwtBuilder` and `IEncryptor` middlewares are added using dependency injection in _Startup.cs_:
 
-<pre lang="cs">// This method gets called by the runtime. 
+```csharp
+// This method gets called by the runtime. 
 // Use this method to add services to the container.
 public void ConfigureServices(IServiceCollection services)
 {
@@ -519,11 +556,13 @@ public void ConfigureServices(IServiceCollection services)
     });
 
     // ...
-}</pre>
+}
+```
 
 Below is `AddJwt` extension method:
 
-<pre lang="cs">public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
+```csharp
+public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
 {
     var options = new JwtOptions();
     var section = configuration.GetSection("jwt");
@@ -542,19 +581,23 @@ Below is `AddJwt` extension method:
                                    (Encoding.UTF8.GetBytes(options.Secret))
             };
         });
-}</pre>
+}
+```
 
 `IJwtBuilder` is responsible for creating JWT tokens and validating them:
 
-<pre lang="cs">public interface IJwtBuilder
+```csharp
+public interface IJwtBuilder
 {
     string GetToken(string userId);
     string ValidateToken(string token);
-}</pre>
+}
+```
 
 Below is the implementation of `IJwtBuilder`:
 
-<pre lang="cs">public class JwtBuilder(IOptions<JwtOptions> options) : IJwtBuilder
+```csharp
+public class JwtBuilder(IOptions<JwtOptions> options) : IJwtBuilder
 {
     private readonly JwtOptions _options = options.Value;
 
@@ -630,19 +673,23 @@ Below is the implementation of `IJwtBuilder`:
             return null;
         }
     }
-}</pre>
+}
+```
 
 `IEncryptor` is simply responsible for encrypting passwords:
 
-<pre lang="cs">public interface IEncryptor
+```csharp
+public interface IEncryptor
 {
     string GetSalt();
     string GetHash(string value, string salt);
-}</pre>
+}
+```
 
 Below is the implementation of `IEncryptor`:
 
-<pre lang="cs">public class Encryptor: IEncryptor
+```csharp
+public class Encryptor: IEncryptor
 {
     private const int SALT_SIZE = 40;
     private const int ITERATIONS_COUNT = 10000;
@@ -671,11 +718,13 @@ Below is the implementation of `IEncryptor`:
 
         return bytes;
     }
-}</pre>
+}
+```
 
 Below is `Configure` method in _Startup.cs_:
 
-<pre lang="cs">// This method gets called by the runtime. 
+```csharp
+// This method gets called by the runtime. 
 // Use this method to configure the HTTP request pipeline.
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
@@ -707,11 +756,13 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         endpoints.MapControllers();
     });
-}</pre>
+}
+```
 
 Below is _appsettings.json_:
 
-<pre lang="json">{
+```js
+{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -728,24 +779,29 @@ Below is _appsettings.json_:
     "secret": "9095a623-a23a-481a-aa0c-e0ad96edc103",
     "expiryMinutes": 60
   }
-}</pre>
+}
+```
 
 Now, let's test `IdentityMicroservice`.
 
 Open Postman and execute the following `POST` request [http://localhost:44397/api/identity/register](http://localhost:44397/api/identity/register) with the following payload to register a user:
 
-<pre lang="json">{
+```js
+{
   "email": "user@store.com",
   "password": "pass"
 }
-</pre>
+
+```
 
 Now, execute the following `POST` request [http://localhost:44397/api/identity/login](http://localhost:44397/api/identity/login) with the following payload to create a JWT token:
 
-<pre lang="json">{
+```js
+{
   "email": "user@store.com",
   "password": "pass"
-}</pre>
+}
+```
 
 ![Image](https://github.com/aelassas/microservices/blob/main/img/register.jpg?raw=true)
 
@@ -765,7 +821,8 @@ Now, let's add JWT authentication to catalog microservice.
 
 First, we have to add `jwt` section in _appsettings.json_:
 
-<pre lang="json">{
+```js
+{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -781,22 +838,26 @@ First, we have to add `jwt` section in _appsettings.json_:
     "connectionString": "mongodb://127.0.0.1:27017",
     "database": "store-catalog"
   }
-}</pre>
+}
+```
 
 Then, we have to add JWT configuration in `ConfigureServices` method in _Startup.cs_:
 
-<pre lang="cs">public void ConfigureServices(IServiceCollection services)
+```csharp
+public void ConfigureServices(IServiceCollection services)
 {
     services.AddControllers();
 
     services.AddJwtAuthentication(Configuration); // JWT Configuration
 
     // ...
-}</pre>
+}
+```
 
 Where `AddJwtAuthentication` extension method is implemented as follows:
 
-<pre lang="cs">public static void AddJwtAuthentication
+```csharp
+public static void AddJwtAuthentication
     (this IServiceCollection services, IConfiguration configuration)
 {
     var section = configuration.GetSection("jwt");
@@ -833,11 +894,13 @@ Where `AddJwtAuthentication` extension method is implemented as follows:
             .RequireAuthenticatedUser()
             .Build();
     });
-}</pre>
+}
+```
 
 `JwtMiddleware` is responsible for validating JWT token:
 
-<pre lang="cs">public class JwtMiddleware(IJwtBuilder jwtBuilder) : IMiddleware
+```csharp
+public class JwtMiddleware(IJwtBuilder jwtBuilder) : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -865,13 +928,15 @@ Where `AddJwtAuthentication` extension method is implemented as follows:
         // Continue processing the request
         await next(context);
     }
-}</pre>
+}
+```
 
 If the JWT token or the user ID are invalid, we send **401 Unauthorized status**.
 
 Then, we resigster `JwtMiddleware` in `Configure` method in _Startup.cs_:
 
-<pre lang="cs">public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+```csharp
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
     // ...
 
@@ -882,11 +947,13 @@ Then, we resigster `JwtMiddleware` in `Configure` method in _Startup.cs_:
     app.UseAuthorization();
 
     // ...
-}</pre>
+}
+```
 
 Then, we specify that we require JWT authentication for our endpoints in _CatalogController.cs_ through `[Authorize]` attribute:
 
-<pre lang="cs">// GET: api/<CatalogController>
+```csharp
+// GET: api/<CatalogController>
 [HttpGet]
 [Authorize]
 public IActionResult Get()
@@ -895,13 +962,15 @@ public IActionResult Get()
     return Ok(catalogItems);
 }
 
-// ...</pre>
+// ...
+```
 
 Now, catalog microservice is secured through JWT authentication. Cart microservice was secured in the same way.
 
 Finally, we need to add JWT authentication to Swagger. To do so, we need to update `AddSwaggerGen` in `ConfigureServices` in _Statup.cs_:
 
-<pre lang="cs">public void ConfigureServices(IServiceCollection services)
+```csharp
+public void ConfigureServices(IServiceCollection services)
 {
     //...
 
@@ -933,7 +1002,8 @@ Finally, we need to add JWT authentication to Swagger. To do so, we need to upda
     });
 
     //...
-}</pre>
+}
+```
 
 Now if you want to run Postman on catalog or cart microservices, you need to specify the **Bearer Token** in **Authorization** tab.
 
@@ -945,7 +1015,8 @@ If you want to test catalog or cart microservices with Swagger, you need to clic
 
 Below are the models used by `CartMicroservice`:
 
-<pre lang="cs">public class Cart
+```csharp
+public class Cart
 {
     public static readonly string DocumentName = nameof(Cart);
 
@@ -964,11 +1035,13 @@ public class CartItem
     public required string Name { get; set; }
     public decimal Price { get; set; }
     public int Quantity { get; set; }
-}</pre>
+}
+```
 
 Below is the repository interface:
 
-<pre lang="cs">public interface ICartRepository
+```csharp
+public interface ICartRepository
 {
     IList<CartItem> GetCartItems(string userId);
     void InsertCartItem(string userId, CartItem cartItem);
@@ -976,11 +1049,13 @@ Below is the repository interface:
     void DeleteCartItem(string userId, string cartItemId);
     void UpdateCatalogItem(string catalogItemId, string name, decimal price);
     void DeleteCatalogItem(string catalogItemId);
-}</pre>
+}
+```
 
 Below is the repository:
 
-<pre lang="cs">public class CartRepository(IMongoDatabase db) : ICartRepository
+```csharp
+public class CartRepository(IMongoDatabase db) : ICartRepository
 {
     private readonly IMongoCollection<Cart> _col = 
                            db.GetCollection<Cart>(Cart.DocumentName);
@@ -1082,11 +1157,13 @@ Below is the repository:
 
     private IList<Cart> GetCarts(string catalogItemId) =>
         _col.Find(c => c.CartItems.Any(i => i.CatalogItemId == catalogItemId)).ToList();
-}</pre>
+}
+```
 
 Below is the controller:
 
-<pre lang="cs">[Route("api/[controller]")]
+```csharp
+[Route("api/[controller]")]
 [ApiController]
 public class CartController(ICartRepository cartRepository) : ControllerBase
 {
@@ -1147,11 +1224,13 @@ public class CartController(ICartRepository cartRepository) : ControllerBase
         cartRepository.DeleteCatalogItem(catalogItemId);
         return Ok();
     }
-}</pre>
+}
+```
 
 `ICartRepository` is added using dependency injection in _Startup.cs_ in order to make the microservice testable:
 
-<pre lang="cs">public void ConfigureServices(IServiceCollection services)
+```csharp
+public void ConfigureServices(IServiceCollection services)
 {
     services.AddControllers();
 
@@ -1165,13 +1244,15 @@ public class CartController(ICartRepository cartRepository) : ControllerBase
     );
 
     // ...
-}</pre>
+}
+```
 
 `Configure` method in _Startup.cs_ is the same as the one in `CatalogMicroservice`.
 
 Below is _appsettings.json_:
 
-<pre lang="json">{
+```js
+{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -1187,7 +1268,8 @@ Below is _appsettings.json_:
     "connectionString": "mongodb://127.0.0.1:27017",
     "database": "store-cart"
   }
-}</pre>
+}
+```
 
 API documentation is generated using Swashbuckle. Swagger middleware is configured in _Startup.cs_, in `ConfigureServices` and `Configure` methods in _Startup.cs._
 
@@ -1201,7 +1283,8 @@ Let's start with the frontend.
 
 _ocelot.json_ configuration file was added in _Program.cs_ as follows:
 
-<pre lang="cs">var builder = Host.CreateDefaultBuilder(args)
+```csharp
+var builder = Host.CreateDefaultBuilder(args)
         .ConfigureAppConfiguration((hostingContext, config) =>
         {
             config
@@ -1233,13 +1316,15 @@ _ocelot.json_ configuration file was added in _Program.cs_ as follows:
             webBuilder.UseStartup<Startup>();
         });
 
-builder.Build().Run();</pre>
+builder.Build().Run();
+```
 
 Serilog is configured to write logs to the console. You can, of course, write logs to text files using `WriteTo.File(@"Logs\store.log")` and _`Serilog.Sinks.File`_ nuget package.
 
 Then, here is _Startup.cs_:
 
-<pre lang="cs">public class Startup(IConfiguration configuration)
+```csharp
+public class Startup(IConfiguration configuration)
 {
     private IConfiguration Configuration { get; } = configuration;
 
@@ -1303,11 +1388,13 @@ Then, here is _Startup.cs_:
 
         await app.UseOcelot();
     }
-}</pre>
+}
+```
 
 `RequestResponseLogging` middleware is responsible for logging requests and responses:
 
-<pre lang="cs">public class RequestResponseLogging(RequestDelegate next, ILogger<RequestResponseLogging> logger)
+```csharp
+public class RequestResponseLogging(RequestDelegate next, ILogger<RequestResponseLogging> logger)
 {
     public async Task InvokeAsync(HttpContext context)
     {
@@ -1362,13 +1449,15 @@ Then, here is _Startup.cs_:
         response.Body.Seek(0, SeekOrigin.Begin);
         return $"{response.StatusCode}: {text}";
     }
-}</pre>
+}
+```
 
 We used logging in the gateway so that we don't need to check the logs of each microservice.
 
 Here is _ocelot.Development.json_:
 
-<pre lang="json">{
+```js
+{
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/catalog",
@@ -1506,11 +1595,13 @@ Here is _ocelot.Development.json_:
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:44300/"
   }
-}</pre>
+}
+```
 
 And finally, below is _appsettings.json_:
 
-<pre lang="json">{
+```js
+{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -1525,16 +1616,19 @@ And finally, below is _appsettings.json_:
   "mongo": {
     "connectionString": "mongodb://127.0.0.1:27017"
   }
-}</pre>
+}
+```
 
 Now, let's test the frontend gateway.
 
 First, execute the following `POST` request [http//localhost:44300/identity/login](http://http//localhost:44300/identity/login) with the following payload to create a JWT token:
 
-<pre lang="json">{
+```js
+{
   "email": "user@store.com",
   "password": "pass"
-}</pre>
+}
+```
 
 We already created that user while testing `IdentityMicroservice`. If you didn't create that user, you can create one by executing the following `POST` request [http://localhost:44300/identity/register](http://localhost:44300/identity/register) with the same payload above.
 
@@ -1607,13 +1701,16 @@ Let's pick the login page of the frontend for example. Here is the HTML:
 
 Here is _settings.js_:
 
-<pre lang="jscript">export default {
+```js
+export default {
     uri: "http://localhost:44300/"
-};</pre>
+};
+```
 
 And here is _login.js_:
 
-<pre lang="jscript">import settings from "./settings.js";
+```js
+import settings from "./settings.js";
 import common from "./common.js";
 
 window.onload = () => {
@@ -1652,11 +1749,13 @@ window.onload = () => {
     document.getElementById("register").onclick = () => {
         location.href = "/register.html";
     };
-};</pre>
+};
+```
 
 _common.js_ contains functions for executing `GET`, `POST` and `DELETE` requests:
 
-<pre lang="jscript">export default {
+```js
+export default {
     post: async (url, callback, errorCallback, content, token) => {
         try {
             const headers = {
@@ -1743,7 +1842,8 @@ _common.js_ contains functions for executing `GET`, `POST` and `DELETE` requests
             }
         }
     }
-};</pre>
+};
+```
 
 The other pages in the frontend and in the backend are done pretty much the same way.
 
@@ -1781,11 +1881,14 @@ Then, Moq was added using Nuget package manager. At this point, we can start foc
 
 A reference of `CatalogController` was added to `CatalogControllerTest`:
 
-<pre lang="cs">private readonly CatalogController _controller;</pre>
+```csharp
+private readonly CatalogController _controller;
+```
 
 Then, in the constructor of our unit test class, a mock repository was added as follows:
 
-<pre lang="cs">public CatalogControllerTest()
+```csharp
+public CatalogControllerTest()
 {
     var mockRepo = new Mock<ICatalogRepository>();
     mockRepo.Setup(repo => repo.GetCatalogItems()).Returns(_items);
@@ -1807,11 +1910,13 @@ Then, in the constructor of our unit test class, a mock repository was added as 
     mockRepo.Setup(repo => repo.DeleteCatalogItem(It.IsAny<string>()))
         .Callback<string>(id => _items.RemoveAll(i => i.Id == id));
     _controller = new CatalogController(mockRepo.Object);
-}</pre>
+}
+```
 
 where `_items` is a list of `CatalogItem`:
 
-<pre lang="cs">private static readonly string A54Id = "653e4410614d711b7fc953a7";
+```csharp
+private static readonly string A54Id = "653e4410614d711b7fc953a7";
 private static readonly string A14Id = "253e4410614d711b7fc953a7";
 private readonly List<CatalogItem> _items = new()
 {
@@ -1829,22 +1934,26 @@ private readonly List<CatalogItem> _items = new()
         Description = "Samsung Galaxy A14 5G mobile phone",
         Price = 200
     }
-};</pre>
+};
+```
 
 Then, here is the test of **GET api/catalog**:
 
-<pre lang="cs">[Fact]
+```csharp
+[Fact]
 public void GetCatalogItemsTest()
 {
     var okObjectResult = _controller.Get();
     var okResult = Assert.IsType<OkObjectResult>(okObjectResult);
     var items = Assert.IsType<List<CatalogItem>>(okResult.Value);
     Assert.Equal(2, items.Count);
-}</pre>
+}
+```
 
 Here is the test of **GET api/catalog/{id}**:
 
-<pre lang="cs">[Fact]
+```csharp
+[Fact]
 public void GetCatalogItemTest()
 {
     var id = A54Id;
@@ -1852,11 +1961,13 @@ public void GetCatalogItemTest()
     var okResult = Assert.IsType<OkObjectResult>(okObjectResult);
     var item = Assert.IsType<CatalogItem>(okResult.Value);
     Assert.Equal(id, item.Id);
-}</pre>
+}
+```
 
 Here is the test of **POST api/calatlog**:
 
-<pre lang="cs">[Fact]
+```csharp
+[Fact]
 public void InsertCatalogItemTest()
 {
     var createdResponse = _controller.Post(
@@ -1871,11 +1982,13 @@ public void InsertCatalogItemTest()
     var response = Assert.IsType<CreatedAtActionResult>(createdResponse);
     var item = Assert.IsType<CatalogItem>(response.Value);
     Assert.Equal("iPhone 15", item.Name);
-}</pre>
+}
+```
 
 Here is the test of **PUT api/catalog**:
 
-<pre lang="cs">[Fact]
+```csharp
+[Fact]
 public void UpdateCatalogItemTest()
 {
     var id = A54Id;
@@ -1893,11 +2006,13 @@ public void UpdateCatalogItemTest()
     Assert.Equal("Samsung Galaxy S23 Ultra", item.Name);
     okObjectResult = _controller.Put(null);
     Assert.IsType<NoContentResult>(okObjectResult);
-}</pre>
+}
+```
 
 Here is the test of **DELETE api/catalog/{id}**:
 
-<pre lang="cs">[Fact]
+```csharp
+[Fact]
 public void DeleteCatalogItemTest()
 {
     var id = A54Id;
@@ -1907,13 +2022,15 @@ public void DeleteCatalogItemTest()
     Assert.IsType<OkResult>(okObjectResult);
     item = _items.FirstOrDefault(i => i.Id == id);
     Assert.Null(item);
-}</pre>
+}
+```
 
 Unit tests of cart microservice and identity microservice were written in the same way.
 
 Here are the unit tests of cart microservice:
 
-<pre lang="cs">public class CartControllerTest
+```csharp
+public class CartControllerTest
 {
     private readonly CartController _controller;
     private static readonly string UserId = "653e43b8c76b6b56a720803e";
@@ -2105,11 +2222,13 @@ Here are the unit tests of cart microservice:
         item = items.FirstOrDefault(i => i.CatalogItemId == id);
         Assert.Null(item);
     }
-}</pre>
+}
+```
 
 Here are the unit tests of identity microservice:
 
-<pre lang="cs">public class IdentityControllerTest
+```csharp
+public class IdentityControllerTest
 {
     private readonly IdentityController _controller;
     private static readonly string AdminUserId = "653e4410614d711b7fc951a7";
@@ -2268,7 +2387,8 @@ Here are the unit tests of identity microservice:
         var userId = Assert.IsType<string>(okResult.Value);
         Assert.Equal(user.Id, userId);
     }
-}</pre>
+}
+```
 
 If we run the unit tests, we will notice that they all pass:
 
@@ -2304,7 +2424,8 @@ To add health checks to catalog microservice, the following nuget packages were 
 
 Then, `ConfigureServices` method in _Startup.cs_ was updated as follows:
 
-<pre lang="cs">services.AddHealthChecks()
+```csharp
+services.AddHealthChecks()
     .AddMongoDb(
         mongodbConnectionString: (
             Configuration.GetSection("mongo").Get<MongoOptions>()
@@ -2313,21 +2434,25 @@ Then, `ConfigureServices` method in _Startup.cs_ was updated as follows:
         name: "mongo",
         failureStatus: HealthStatus.Unhealthy
     );
-services.AddHealthChecksUI().AddInMemoryStorage();</pre>
+services.AddHealthChecksUI().AddInMemoryStorage();
+```
 
 And `Configure` method in _Startup.cs_ was updated as follows:
 
-<pre lang="cs">app.UseHealthChecks("/healthz", new HealthCheckOptions
+```csharp
+app.UseHealthChecks("/healthz", new HealthCheckOptions
 {
     Predicate = _ => true,
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
-app.UseHealthChecksUI();</pre>
+app.UseHealthChecksUI();
+```
 
 Finally, _appsettings.json_ was updated as follows:
 
-<pre lang="json">{
+```js
+{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -2354,7 +2479,8 @@ Finally, _appsettings.json_ was updated as follows:
     "EvaluationTimeOnSeconds": 10,
     "MinimumSecondsBetweenFailureNotifications": 60
   }
-}</pre>
+}
+```
 
 If we run catalog microservice, we will get the following UI when accessing [http://localhost:44326/healthchecks-ui](http://localhost:44326/healthchecks-ui):
 
@@ -2380,11 +2506,13 @@ To login to the frontend for the first time, just click on **Register** to creat
 
 To login to the backend for the first time, you will need to create an admin user. To do so, open Swagger through [http://localhost:44397/](http://localhost:44397/) and register or open Postman and execute the following `POST` request [http://localhost:44397/api/identity/register](http://localhost:44397/api/identity/register) with the following payload:
 
-<pre lang="json">{
+```js
+{
   "email": "admin@store.com",
   "password": "pass",
   "isAdmin": true
-}</pre>
+}
+```
 
 Finally, you can login to the backend with the admin user you created.
 
@@ -2410,7 +2538,9 @@ First, copy the source code to a folder on your machine.
 
 Then open a terminal, go to that folder (where _store.sln_ file is located) and run the following command:
 
-<pre lang="shell">docker-compose up</pre>
+```bash
+docker-compose up
+```
 
 That's it, the application will be deployed and will run.
 
@@ -2422,7 +2552,8 @@ Here is a screenshot of the application running on Ubuntu:
 
 For those who want to understand how the deployment is done, here is _docker-compose.yml_:
 
-<pre lang="YAML">version: "3.8"
+```yaml
+version: "3.8"
 services:
   mongo:
     image: mongo
@@ -2491,13 +2622,15 @@ services:
       context: .
       dockerfile: src/uis/Backend/Dockerfile
     ports:
-      - 44301:80</pre>
+      - 44301:80
+```
 
 Then, _appsettings.Production.json_ was used in microservices and gateways, and _ocelot.Production.json_ was used in gateways.
 
 For example, here is _appsettings.Production.json_ of catalog microservice:
 
-<pre lang="json">{
+```js
+{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -2520,11 +2653,13 @@ For example, here is _appsettings.Production.json_ of catalog microservice:
     "EvaluationTimeOnSeconds": 10,
     "MinimumSecondsBetweenFailureNotifications": 60
   }
-}</pre>
+}
+```
 
 Here is _Dockerfile_ of catalog microservice:
 
-<pre lang="shell"># syntax=docker/dockerfile:1
+```bash
+# syntax=docker/dockerfile:1
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
@@ -2549,13 +2684,15 @@ ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
 EXPOSE 443
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "CatalogMicroservice.dll"]</pre>
+ENTRYPOINT ["dotnet", "CatalogMicroservice.dll"]
+```
 
 Multistage build is explained [here](https://docs.microsoft.com/en-us/visualstudio/containers/container-build?view=vs-2019). It helps make the process of building containers more efficient, and makes containers smaller by allowing them to contain only the bits that your app needs at run time.
 
 Here is _ocelot.Production.json_ of the frontend gateway:
 
-<pre lang="json">{
+```js
+{
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/catalog",
@@ -2693,11 +2830,13 @@ Here is _ocelot.Production.json_ of the frontend gateway:
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:44300/"
   }
-}</pre>
+}
+```
 
 Here is _appsettings.Production.json_ of the frontend gateway:
 
-<pre lang="json">{
+```js
+{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -2722,11 +2861,13 @@ Here is _appsettings.Production.json_ of the frontend gateway:
     "EvaluationTimeOnSeconds": 10,
     "MinimumSecondsBetweenFailureNotifications": 60
   }
-}</pre>
+}
+```
 
 And finally, here is _Dockerfile_ of the frontend gateway:
 
-<pre lang="shell"># syntax=docker/dockerfile:1
+```bash
+# syntax=docker/dockerfile:1
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
@@ -2750,7 +2891,8 @@ ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
 EXPOSE 443
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "FrontendGateway.dll"]</pre>
+ENTRYPOINT ["dotnet", "FrontendGateway.dll"]
+```
 
 The configurations of other microservices and the backend gateway are done in pretty much the same way.
 
