@@ -1,3 +1,5 @@
+[![Build](https://github.com/aelassas/microservices/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/microservices/actions/workflows/build.yml) [![Test](https://github.com/aelassas/microservices/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/microservices/actions/workflows/test.yml)
+
 ## Contents
 
 1.  [Introduction](#introduction)
