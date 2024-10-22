@@ -24,8 +24,6 @@
 
 ## <a id="introduction" name="introduction">Introduction</a>
 
-Following the recent release of .NET 8, I have taken it upon myself to write a comprehensive guide on building microservices using ASP.NET Core 8\. This latest version of .NET is a significant release that offers a number of new features and enhancements, as well as performance improvements and long-term support. It builds on the performance enhancements introduced in .NET 7 by further optimizing the Just-In-Time (JIT) compiler, garbage collector, and runtime. The result is faster startup times, better overall application performance, and reduced memory usage. You can find out more about all the new features and enhancements [here](https://devblogs.microsoft.com/dotnet/announcing-dotnet-8/). Now, let's focus on microservices.
-
 ![Image](https://github.com/aelassas/microservices/blob/main/img/microservices-logical.png?raw=true)
 
 A microservices architecture consists of a collection of small, independent, and loosely coupled services. Each service is self-contained, implements a single business capability, is responsible for persisting its own data, is a separate codebase, and can be deployed independently.
